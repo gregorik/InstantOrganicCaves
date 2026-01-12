@@ -4,7 +4,9 @@
 
 ![Unreal Engine 5.7](https://img.shields.io/badge/Unreal%20Engine-5.7-black?style=flat&logo=unrealengine)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
+![License](https://img.shields.io/badge/License-GPL3-green)
+![alt text](https://img.shields.io/github/stars/gregorik/InstantOrganicCaves)
+![alt text](https://img.shields.io/badge/Support-Patreon-red)
 
 ## 📖 Overview
 
