@@ -7,6 +7,7 @@
 ![License](https://img.shields.io/badge/License-GPL3-green)
 ![alt text](https://img.shields.io/github/stars/gregorik/InstantOrganicCaves)
 ![alt text](https://img.shields.io/badge/Support-Patreon-red)
+[![YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=flat&logo=youtube)](https://www.youtube.com/@agregori)
 
 ## 📖 Overview
 
