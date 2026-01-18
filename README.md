@@ -9,6 +9,8 @@
 ![alt text](https://img.shields.io/badge/Support-Patreon-red)
 [![YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=flat&logo=youtube)](https://www.youtube.com/@agregori)
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C616ULD4)
+
 ## 📖 Overview
 
 **Instant Organic Caves (IOC)** is a plugin designed to generate massive, seamless, and organic cave systems procedurally at runtime. Unlike traditional marketplace assets that rely on static meshes or Blueprint construction scripts, IOC utilizes a **"Metal C++"** approach.
