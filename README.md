@@ -1,10 +1,9 @@
 # Instant Organic Caves (IOC)
+![image](https://img.shields.io/badge/-Unreal%20Engine-313131?style=for-the-badge&logo=unreal-engine&logoColor=blue) ![image](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=blue) ![image](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue) ![image](https://img.shields.io/badge/json-5E5C5C?style=for-the-badge&logo=json&logoColor=white) ![image](https://img.shields.io/badge/MIT-green?style=for-the-badge)
+
 
 **A high-performance, strictly programmatic voxel environment generator for Unreal Engine 5.7.**
 
-![Unreal Engine 5.7](https://img.shields.io/badge/Unreal%20Engine-5.7-black?style=flat&logo=unrealengine)
-![Language](https://img.shields.io/badge/Language-C%2B%2B-blue)
-![License](https://img.shields.io/badge/License-GPL3-green)
 ![alt text](https://img.shields.io/github/stars/gregorik/InstantOrganicCaves)
 ![alt text](https://img.shields.io/badge/Support-Patreon-red)
 [![YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=flat&logo=youtube)](https://www.youtube.com/@agregori)
@@ -110,4 +109,4 @@ This is an open-source project. Pull requests are welcome, particularly for:
 
 ## 📜 License
 
-Distributed under the GPL 3.0 License. See `LICENSE` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
