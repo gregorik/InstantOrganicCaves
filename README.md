@@ -5,7 +5,8 @@
 **A high-performance, strictly programmatic voxel environment generator for Unreal Engine 5.7.**
 
 [Intro video 1](https://www.youtube.com/watch?v=xURtHTS8Stk) <br>
-[Update video 1](https://www.youtube.com/watch?v=-H_Fm3QvMXA)
+[Update video 1](https://www.youtube.com/watch?v=-H_Fm3QvMXA) <br>
+[There is an updated + supported version at Fab if interested](https://www.fab.com/listings/016b22dc-d04c-41fa-857c-d4f391a96c12)
 
 
 ## 📖 Overview
