@@ -11,9 +11,37 @@
 
 ## 📖 Overview
 
-**Instant Organic Caves (IOC)** is a plugin designed to generate massive, seamless, and organic cave systems procedurally at runtime. Unlike traditional marketplace assets that rely on static meshes or Blueprint construction scripts, IOC utilizes a **"Metal C++"** approach.
+**Instant Organic Caves (IOC)** is a plugin designed to generate massive, seamless, and organic cave systems procedurally at runtime. Unlike traditional marketplace assets that rely on static meshes or Blueprint construction scripts, IOC utilizes a purist C++ approach.
 
-It builds geometry directly using Unreal's `FDynamicMesh3` core math libraries, bypassing overhead from the Blueprint VM and intermediate wrapper libraries. The result is a system that can generate infinite, seamless, Nanite-enabled environments suitable for high-fidelity production.
+It builds geometry directly using Unreal's `FDynamicMesh3` core math libraries, bypassing overhead from the Blueprint VM and intermediate wrapper libraries. The result is a system that can generate infinite, seamless, Nanite-enabled environments suitable for high-fidelity production. <br<br>
+
+| <i><b>Comparison | <i><b>GitHub version (0.1+ MIT)           | <i>FAB edition (0.3+ Closed)</b></i>                |
+|:---|:---|:---|
+| **Version** | Core | Fully featured + updated |
+| **Distribution** | Source only | Binaries, vetted by Epic |
+| **Engine support** | UE 5.7.0 | UE 5.6 - 5.7.3+ |
+| **Procedural Perlin caves/tunnels** | Included | Included |
+| **Cellular automata caves** | Included | Included |
+| **PCG Integration** | Included | Included |
+| **Edge falloff / Clean shells** | Included | Included |
+| **Debug visualization** | Included | Included | 
+| **Multi-Spline Branching** | n/a | Included |
+| **Infinite/tileable cellular automata** | n/a | Included |
+| **Domain warp & terraces** | n/a | Included | 
+| **Async generation** | n/a | Included |
+| **Async decoration scattering** | n/a | Included |
+| **LOD mesh generation** | n/a | Included |
+| **Complex-as-Simple Collision** | n/a | Included |
+| **Streaming Manager** | n/a | Included |
+| **Auto UV's** | n/a | Included |
+| **Runtime Carving API** | n/a | Included |
+| **Carving Volume Component** | n/a | Included |
+| **5 Built-in Presets** | n/a | Included |
+| **Smart Vertex Colors** | n/a | Included |
+| **Updates** | n/a | Regular, vetted by Epic |
+| **Quality Assurance** | GitHub Issues | Vetted by Epic, tested by author |
+| **Support** | GitHub Issues | Forum & Email |
+<br><br>
 
 ## ✨ Key Features
 
