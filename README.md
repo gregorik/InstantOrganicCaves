@@ -4,7 +4,7 @@
 
 **A high-performance, strictly programmatic voxel environment generator for Unreal Engine 5.7.**
 
-[Intro video 1](https://www.youtube.com/watch?v=xURtHTS8Stk) <br>
+[Intro video 1 (really old and basic)](https://www.youtube.com/watch?v=xURtHTS8Stk) <br>
 [Update video 1](https://www.youtube.com/watch?v=-H_Fm3QvMXA) <br>
 [There is an updated + supported version at Fab if interested](https://www.fab.com/listings/016b22dc-d04c-41fa-857c-d4f391a96c12)
 
@@ -15,7 +15,7 @@
 
 It builds geometry directly using Unreal's `FDynamicMesh3` core math libraries, bypassing overhead from the Blueprint VM and intermediate wrapper libraries. The result is a system that can generate infinite, seamless, Nanite-enabled environments suitable for high-fidelity production. <br><br>
 
-| <i><b>Comparison | <i><b>GitHub version (0.1+ MIT)           | <i>FAB edition (0.3+ Closed)</b></i>                |
+| <i><b>Comparison | <i><b>GitHub version (0.1+ MIT)           | <i>[FAB edition](https://www.fab.com/listings/016b22dc-d04c-41fa-857c-d4f391a96c12) (0.3+ Closed)</b></i>                |
 |:---|:---|:---|
 | **Version** | Core | Fully featured + updated |
 | **Distribution** | Source only | Binaries, vetted by Epic |
