@@ -13,7 +13,8 @@
 
 **Instant Organic Caves (IOC)** is a plugin designed to generate massive, seamless, and organic cave systems procedurally at runtime. Unlike traditional marketplace assets that rely on static meshes or Blueprint construction scripts, IOC utilizes a purist C++ approach.
 
-It builds geometry directly using Unreal's `FDynamicMesh3` core math libraries, bypassing overhead from the Blueprint VM and intermediate wrapper libraries. The result is a system that can generate infinite, seamless, Nanite-enabled environments suitable for high-fidelity production. <br><br>
+It builds geometry directly using Unreal's `FDynamicMesh3` core math libraries, bypassing overhead from the Blueprint VM and intermediate wrapper libraries. The result is a system that can generate infinite, seamless, Nanite-enabled environments suitable for high-fidelity production. Also, in case you need this adapted or integrated into a production UE5 project: I offer paid Unreal Engine [consulting and implementation](https://gregorigin.com/contact.html).
+ <br><br>
 
 | <i><b>Comparison | <i><b>GitHub version (0.1+ MIT)           | <i>[FAB edition](https://www.fab.com/listings/016b22dc-d04c-41fa-857c-d4f391a96c12) (0.3+ Closed)</b></i>                |
 |:---|:---|:---|
