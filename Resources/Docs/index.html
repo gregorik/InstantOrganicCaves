@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instant Organic Caves // Documentation</title>
+    
+    <!-- 1. Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Prism (Syntax Highlighting) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    
+    <!-- 3. Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        'greg-dark': '#0B1120',
+                        'greg-panel': '#0f172a',
+                        'greg-border': '#1e293b',
+                        'greg-green': '#10b981',
+                        'greg-green-dim': '#059669',
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'scan': 'scan 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        scan: {
+                            '0%, 100%': { transform: 'translateY(0%)' },
+                            '50%': { transform: 'translateY(100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 4. Styles -->
+    <style type="text/tailwindcss">
+        /* Base */
+        body { 
+            @apply bg-greg-dark text-slate-400 selection:bg-greg-green selection:text-white font-sans; 
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0B1120; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+        /* Content Typography */
+        .doc-content h1 { @apply text-3xl font-bold text-white mb-6 border-b border-greg-border pb-4 flex items-center gap-3 tracking-tight; }
+        .doc-content h2 { @apply text-xl font-semibold text-white mt-12 mb-4 flex items-center gap-2 cursor-pointer border-l-2 border-transparent hover:border-greg-green pl-0 hover:pl-3 transition-all duration-300; }
+        .doc-content h3 { @apply text-lg font-medium text-greg-green mt-8 mb-3 flex items-center gap-2; }
+        .doc-content p { @apply leading-7 mb-4 text-slate-400; }
+        .doc-content ul { @apply list-disc list-outside ml-5 mb-4 space-y-2 marker:text-slate-600; }
+        
+        /* Code & Pre */
+        code { @apply bg-[#0D1117] text-greg-green text-sm px-1.5 py-0.5 rounded font-mono border border-greg-border; }
+        pre { @apply bg-[#0D1117] p-4 rounded-lg overflow-x-auto border border-greg-border mb-6 shadow-xl; }
+        
+        /* Interactive Visuals */
+        .illustration-box { @apply w-full bg-[#080c14] border border-greg-border rounded-xl overflow-hidden relative mb-8 shadow-2xl; }
+
+        /* Navigation */
+        .nav-item { 
+            @apply flex items-center gap-3 px-4 py-2 text-sm font-medium border-l-2 border-transparent transition-all duration-200 cursor-pointer opacity-60 hover:opacity-100 hover:text-white; 
+        }
+        .nav-item.active { 
+            @apply text-greg-green border-greg-green bg-greg-green/5 opacity-100; 
+        }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden text-slate-400">
+
+    <!-- SIDEBAR -->
+    <aside class="w-full md:w-80 bg-greg-panel border-r border-greg-border flex-shrink-0 flex flex-col h-full z-20">
+        
+        <!-- HEADER -->
+        <div class="p-6 border-b border-greg-border bg-greg-panel/50">
+            <a href="www.gregorigin.com" class="text-xs font-mono text-slate-500 hover:text-white transition block mb-4">
+                &larr; GregOrigin_Systems
+            </a>
+            
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-greg-green/10 rounded-lg flex items-center justify-center border border-greg-green/20 text-greg-green">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-tight leading-none">IOC Manual</h1>
+                    <span class="text-[10px] uppercase tracking-widest text-greg-green font-bold">Unreal 5.7+</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION -->
+        <nav class="flex-1 overflow-y-auto pt-6 px-0 space-y-8" id="sidebar-nav">
+            <div>
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Start</h3>
+                <a href="#intro" class="nav-item active">Introduction</a>
+                <a href="#quickstart" class="nav-item">Quickstart & Demo</a>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Features</h3>
+                <a href="#procedural-actor" class="nav-item">Procedural Actor</a>
+                <a href="#ux" class="nav-item text-greg-green">UX & Presets</a>
+                <a href="#tunnels" class="nav-item">Perlin Tunnels</a>
+                <a href="#textures" class="nav-item">Textures & UVs</a>
+                <a href="#pcg" class="nav-item">PCG Integration</a>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Performance</h3>
+                <a href="#async" class="nav-item">Async Generation</a>
+                <a href="#baking" class="nav-item">Static Mesh Baking</a>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Guides</h3>
+                <a href="#pipeline" class="nav-item">Math Pipeline</a>
+                <a href="#noise" class="nav-item">Noise & Scale</a>
+                <a href="#smoothing" class="nav-item">Smoothing</a>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Troubleshooting</h3>
+                <a href="#trouble" class="nav-item">Visual Artifacts</a>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">About</h3>
+                <a href="#about" class="nav-item">Contact</a>
+            </div>
+        </nav>
+
+        <div class="p-6 border-t border-greg-border bg-greg-panel/50 text-[15px] text-slate-600 font-mono text-center">
+            Instant Organic Caves v1.0<br>
+            (c) Andras Gregori 2026
+        </div>
+    </aside>
+
+    <!-- CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto h-full bg-greg-dark scroll-smooth relative" id="main-scroller">
+        
+        <header class="sticky top-0 z-10 bg-greg-dark/80 backdrop-blur-md border-b border-greg-border px-8 py-4 flex items-center justify-between">
+            <div id="breadcrumbs" class="text-sm font-mono text-slate-500 flex items-center gap-2">
+                <span>Docs</span>
+                <span class="text-slate-700">/</span>
+                <span class="text-greg-green" id="breadcrumb-active">Introduction</span>
+            </div>
+            <span class="text-xs bg-greg-green/10 text-greg-green border border-greg-green/30 px-3 py-1 rounded font-mono">Verified UE 5.7</span>
+        </header>
+
+        <div class="max-w-4xl mx-auto px-8 py-12 doc-content">
+            
+            <!-- SECTION: INTRO -->
+            <section id="intro" class="mb-24 scroll-mt-24">
+                <h1>Introduction</h1>
+                
+                <!-- ILLUSTRATION: PROCEDURAL LANDSCAPE -->
+                <div class="illustration-box h-64 flex items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#0B1120]">
+                    <svg viewBox="0 0 800 300" class="w-full h-full opacity-80">
+                        <defs>
+                            <linearGradient id="caveGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#0B1120" stop-opacity="0"/>
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                        </defs>
+                        <!-- Stylized Procedural Waves -->
+                        <path d="M0,150 Q100,50 200,150 T400,150 T600,150 T800,150 V300 H0 Z" fill="url(#caveGrad)" />
+                        <path d="M0,150 Q100,50 200,150 T400,150 T600,150 T800,150" fill="none" stroke="#10b981" stroke-width="2" filter="url(#glow)"/>
+                        
+                        <!-- Grid Overlay -->
+                        <path d="M0,150 L800,150 M200,0 V300 M400,0 V300 M600,0 V300" stroke="#1e293b" stroke-width="1" stroke-dasharray="4"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <h2 class="text-4xl font-bold text-white drop-shadow-2xl tracking-tighter">MATH <span class="text-greg-green">NOT</span> MESHES</h2>
+                    </div>
+                </div>
+
+                <p class="text-lg">
+                    <strong>Instant Organic Caves (IOC)</strong> replaces static asset packs with pure mathematics. It generates seamless, watertight, and infinitely varied tunnel networks using advanced 3D Perlin Noise algorithms, running asynchronously on the CPU.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+                    <div class="bg-greg-panel/50 border border-greg-border p-4 rounded-lg">
+                        <div class="text-greg-green font-bold flex items-center gap-2 mb-2">⚡ Asynchronous Core</div>
+                        <p class="text-sm text-slate-500 m-0 leading-tight">Generation runs on background threads. No frame hitches, no UI lag, even at high resolutions.</p>
+                    </div>
+                    <div class="bg-greg-panel/50 border border-greg-border p-4 rounded-lg">
+                        <div class="text-blue-400 font-bold flex items-center gap-2 mb-2">🌊 Perlin Tunnels</div>
+                        <p class="text-sm text-slate-500 m-0 leading-tight">Generate organic, winding tunnels connecting any two points in 3D space automatically.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: QUICKSTART -->
+            <section id="quickstart" class="mb-24 scroll-mt-24">
+                <h1>Quickstart & Demo</h1>
+                <p>IOC includes a complete "Game Ready" demo scene generator.</p>
+
+                <div class="bg-[#0D1117] p-6 rounded-lg border border-greg-border my-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-20">
+                        <svg class="w-32 h-32 text-greg-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                    
+                    <h3 class="text-white mt-0 mb-4">🚀 Instant Demo Command</h3>
+                    <ol class="list-decimal ml-5 space-y-3 text-slate-400 font-mono text-sm">
+                        <li>Open Output Log or Console (<code class="text-greg-green">~</code>)</li>
+                        <li>Type: <code class="text-white bg-slate-800 px-2 py-1 rounded select-all">IOC.SpawnTunnelDemo</code></li>
+                        <li>Press Enter</li>
+                    </ol>
+                    
+                    <div class="mt-6 p-4 bg-greg-green/5 border border-greg-green/20 rounded-lg">
+                        <p class="text-sm text-greg-green font-medium m-0">
+                            <strong>What happens?</strong><br>
+                            1. A procedural Perlin Tunnel spawns connecting (0,0,0) to (3000, 1500, 800).<br>
+                            2. A complete lighting rig (Sun, Sky, Fog, PostProcess) is created.<br>
+                            3. A playable <strong>3rd Person Character</strong> with a Flashlight is spawned and possessed.<br>
+                            <br>
+                            You can immediately walk around and explore the generated geometry.
+                        </p>
+                    </div>
+                </div>
+
+                <h3>Manual Setup</h3>
+                <p>1. Open the <strong>Place Actors</strong> panel and search for <code>IOC</code>.</p>
+                <p>2. Drag <code>IOCProceduralActor</code> into the level.</p>
+                <p>3. In the Details Panel, configure your <strong>Generation Bounds</strong> and <strong>Voxel Size</strong>.</p>
+            </section>
+
+            <!-- SECTION: PROCEDURAL ACTOR -->
+            <section id="procedural-actor" class="mb-24 scroll-mt-24">
+                <h1>Procedural Actor</h1>
+                <p>The core component for manual generation. Configure bounds, voxels, and smoothing here.</p>
+
+                <!-- ILLUSTRATION: BOUNDS -->
+                <div class="illustration-box h-48 flex items-center justify-center p-8">
+                    <svg viewBox="0 0 400 150" class="w-full h-full">
+                        <!-- Box -->
+                        <rect x="50" y="25" width="300" height="100" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/>
+                        <text x="200" y="20" fill="#3b82f6" font-size="12" font-family="monospace" text-anchor="middle">Generation Bounds (Flexible Vector)</text>
+                        <!-- Voxels -->
+                        <g fill="#3b82f6" opacity="0.2">
+                            <rect x="60" y="35" width="20" height="20"/>
+                            <rect x="90" y="35" width="20" height="20"/>
+                            <rect x="60" y="65" width="20" height="20"/>
+                        </g>
+                        <!-- Arrow -->
+                        <path d="M 360 75 L 390 75" stroke="#fff" marker-end="url(#arrow)" />
+                        <text x="200" y="80" fill="#fff" font-size="14" font-family="monospace" text-anchor="middle">Voxel Size</text>
+                    </svg>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="border-b border-greg-border text-greg-green">
+                                <th class="py-2 w-1/3">Property</th>
+                                <th class="py-2">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-greg-border/50">
+                            <tr>
+                                <td class="py-3 font-mono text-white">GenerationBounds</td>
+                                <td class="py-3">Defines the X, Y, Z size of the generation volume. No longer forced to be a cube. Allows long, flat tunnels or tall shafts.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 font-mono text-white">VoxelSize</td>
+                                <td class="py-3">The size of each processing cube. Default: <code>100.0</code> (1m).</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 font-mono text-white">NoiseFrequency</td>
+                                <td class="py-3">Controls the scale of the organic noise features. Lower values (e.g. 0.005) create larger, smoother caves.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 font-mono text-white">SmoothIterations</td>
+                                <td class="py-3">Applies Laplacian smoothing to the mesh vertices. Removes the "blocky" look of voxels. Default: 3.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION: UX & PRESETS -->
+            <section id="ux" class="mb-24 scroll-mt-24">
+                <h1>UX & Presets</h1>
+                <p>New in v1.1: Intelligent tools to speed up your workflow.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
+                    <div class="bg-greg-panel p-6 rounded-lg border border-greg-border">
+                        <h3 class="mt-0 mb-4 text-white">🎛️ Cave Presets</h3>
+                        <p class="text-sm">Don't guess the math. Use the <strong>CavePreset</strong> dropdown to instantly configure the actor for specific styles:</p>
+                        <ul class="text-sm space-y-2 mt-4 text-slate-400">
+                            <li><strong class="text-white">Large Tunnel:</strong> Wide, majestic passages (Radius 450).</li>
+                            <li><strong class="text-white">Tight Crawl:</strong> Claustrophobic, narrow squeezes (Radius 150).</li>
+                            <li><strong class="text-white">Open Cavern:</strong> Massive underground halls (Radius 1200).</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-greg-panel p-6 rounded-lg border border-greg-border">
+                        <h3 class="mt-0 mb-4 text-white">👁️ Visual Debugging</h3>
+                        <p class="text-sm">Enable <code>bShowDebugViz</code> to see exactly where your cave will generate <em>before</em> you press play.</p>
+                        <ul class="text-sm space-y-2 mt-4 text-slate-400">
+                            <li><span class="text-cyan-400">Cyan Box</span>: Represents the <strong>Generation Bounds</strong>.</li>
+                            <li><span class="text-green-400">Green Line</span>: Shows the guaranteed path of the <strong>Perlin Tunnel</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: TUNNELS -->
+            <section id="tunnels" class="mb-24 scroll-mt-24">
+                <h1>Perlin Tunnels</h1>
+                <p>Enable <code>bGenerateTunnel</code> to switch from "Blob Mode" to "Tunnel Mode". This connects two points with a guaranteed organic path.</p>
+
+                <!-- ILLUSTRATION: TUNNEL -->
+                <div class="illustration-box h-64 flex items-center justify-center bg-black/50">
+                    <svg viewBox="0 0 600 200" class="w-full h-full">
+                        <!-- Points -->
+                        <circle cx="50" cy="100" r="8" fill="#10b981"/>
+                        <text x="50" y="130" fill="#10b981" font-size="12" font-family="monospace" text-anchor="middle">Start</text>
+                        
+                        <circle cx="550" cy="100" r="8" fill="#10b981"/>
+                        <text x="550" y="130" fill="#10b981" font-size="12" font-family="monospace" text-anchor="middle">End</text>
+
+                        <!-- Segment -->
+                        <line x1="50" y1="100" x2="550" y2="100" stroke="#1e293b" stroke-width="2" stroke-dasharray="4"/>
+
+                        <!-- Organic Shell -->
+                        <path d="M50,100 Q150,40 300,100 T550,100" fill="none" stroke="white" stroke-width="40" opacity="0.1" stroke-linecap="round"/>
+                        <path d="M50,100 Q150,60 300,80 T550,100" fill="none" stroke="white" stroke-width="35" opacity="0.2" stroke-linecap="round"/>
+                        
+                        <!-- Logic Overlay -->
+                        <text x="300" y="180" fill="#64748b" font-size="12" font-family="monospace" text-anchor="middle">Distance Field + Perlin Noise Radius</text>
+                    </svg>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 my-6">
+                    <div>
+                        <h3 class="text-white mt-0">How it works</h3>
+                        <p class="text-sm">Instead of random noise, the algorithm calculates a **Distance Field** to a line segment defined by <code>TunnelStart</code> and <code>TunnelEnd</code>.</p>
+                        <p class="text-sm">It then adds 3D Perlin Noise to the radius, creating an organic, uneven tube that is guaranteed to connect the two points.</p>
+                    </div>
+                    <div class="bg-greg-panel border border-greg-border p-4 rounded-lg">
+                        <code class="text-xs block mb-2 text-slate-500">New Parameters</code>
+                        <ul class="text-sm space-y-2 m-0 ml-4 list-none">
+                            <li><span class="text-greg-green">TunnelStart</span>: Start coordinate (Local Space).</li>
+                            <li><span class="text-greg-green">TunnelEnd</span>: End coordinate (Local Space).</li>
+                            <li><span class="text-greg-green">TunnelRadius</span>: Base width of the tunnel.</li>
+                            <li><span class="text-greg-green">WallThickness</span>: Thickness of the tunnel shell.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: TEXTURES -->
+            <section id="textures" class="mb-24 scroll-mt-24">
+                <h1>Textures & Content</h1>
+                <p>IOC now comes with built-in content and automatic UV generation.</p>
+
+                <!-- ILLUSTRATION: TRIPLANAR -->
+                <div class="illustration-box h-48 flex items-center justify-center">
+                    <svg viewBox="0 0 300 150" class="w-full h-full">
+                        <!-- Cube -->
+                        <path d="M150,20 L200,45 L150,70 L100,45 Z" fill="#3b82f6" stroke="#1e293b" stroke-width="2"/> <!-- Top (Z) -->
+                        <path d="M100,45 L150,70 V120 L100,95 Z" fill="#ef4444" stroke="#1e293b" stroke-width="2"/> <!-- Left (X) -->
+                        <path d="M150,70 L200,45 V95 L150,120 Z" fill="#10b981" stroke="#1e293b" stroke-width="2"/> <!-- Right (Y) -->
+                        
+                        <!-- Labels -->
+                        <text x="150" y="48" fill="white" font-size="10" font-family="monospace" text-anchor="middle">Z (Blue)</text>
+                        <text x="120" y="90" fill="white" font-size="10" font-family="monospace" text-anchor="middle">X (Red)</text>
+                        <text x="180" y="90" fill="white" font-size="10" font-family="monospace" text-anchor="middle">Y (Green)</text>
+                    </svg>
+                </div>
+
+                <h3>Triplanar Projection</h3>
+                <p>The system automatically generates UV coordinates for the procedural mesh using a <strong>Box Mapping (Triplanar)</strong> strategy. UVs are projected based on the dominant normal (X, Y, or Z) of each face.</p>
+
+                <h3>Included Assets</h3>
+                <p>A Python Automation Script generates optimized assets on first run (or manually via <code>IOC_Setup.py</code>).</p>
+                <ul class="space-y-4 mt-4">
+                    <li>
+                        <strong class="text-white">BP_IOC_Cave:</strong> A Blueprint wrapper for easy drag-and-drop usage.
+                    </li>
+                    <li>
+                        <strong class="text-white">MI_IOC_CaveWalls:</strong> A customized Material Instance ready for rock textures.
+                    </li>
+                    <li>
+                        <strong class="text-white">TextureTiling:</strong> Controls the scale of the UVs. Default is <code>0.01</code>.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- SECTION: PCG -->
+            <section id="pcg" class="mb-24 scroll-mt-24">
+                <h1>PCG Integration</h1>
+                <p>The <code>IOC Voxel Core</code> PCG node brings this logic into the Procedural Content Generation framework.</p>
+
+                <p>The node now supports a <strong>Generation Mode</strong> switch:</p>
+                <ul class="space-y-2">
+                    <li><strong class="text-white">Cellular Automata:</strong> The classic "Game of Life" cave generation logic (Random noise + neighbor smoothing).</li>
+                    <li><strong class="text-white">Perlin Tunnel:</strong> The new distance-field based tunnel generation logic, matching the Actor implementation.</li>
+                </ul>
+
+                <p>This allows you to generate point clouds representing cave walls inside your PCG graphs, enabling the spawning of instanced meshes, foliage, or lights along the cave surface.</p>
+            </section>
+
+            <!-- SECTION: ASYNC -->
+            <section id="async" class="mb-24 scroll-mt-24">
+                <h1>Performance: Async Generation</h1>
+                <p>
+                    Generating millions of voxels and triangulation is computationally expensive. IOC creates a background task (<code class="text-greg-green">EAsyncExecution::ThreadPool</code>) for all heavy math.
+                </p>
+                <div class="bg-blue-500/10 border border-blue-500/30 p-4 rounded-lg my-4">
+                    <p class="m-0 text-sm text-blue-300">
+                        <strong>Result:</strong> You can drag the generation sliders in real-time or spawn massive caves during gameplay without freezing the main thread. The mesh updates visually as soon as the background task completes.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION: BAKING -->
+            <section id="baking" class="mb-32 scroll-mt-24">
+                <h1>Static Mesh Baking</h1>
+                <p>
+                    While <code>UDynamicMeshComponent</code> is powerful for runtime editing, for shipping games you often want <strong>Static Meshes</strong> to leverage Nanite and Lumen fully.
+                </p>
+                <p>
+                    IOC includes a <strong>Bake To Static Mesh</strong> button in the Details panel (Editor Only). This allows you to freeze the current procedural result into a permanent asset in your Content Browser.
+                </p>
+            </section>
+
+            <!-- SECTION: PIPELINE (MATH) -->
+            <section id="pipeline" class="mb-24 scroll-mt-24">
+                <h1>The Math Pipeline</h1>
+                <p>IOC does not use standard Marching Cubes. It uses a custom pipeline to achieve a stylized, organic look while maintaining topology that supports Laplacians.</p>
+
+                <ol class="list-decimal list-outside ml-5 space-y-4 marker:text-greg-green marker:font-bold">
+                    <li>
+                        <strong class="text-white">World-Space Perlin Field:</strong> 
+                        <p class="text-sm mt-1">We sample 3D noise using coordinate jitter to avoid "Integer Lattice" artifacts (zebra striping). Coordinates are divided by <code>NoiseScale</code>.</p>
+                        <pre><code class="language-cpp">float Noise = FMath::PerlinNoise3D((WorldPos + Jitter) / Scale);</code></pre>
+                    </li>
+                    <li>
+                        <strong class="text-white">Linear Vertex Cache:</strong>
+                        <p class="text-sm mt-1">A cached vertex grid ensures that adjacent voxels share vertices ("Welding"). This prevents the mesh from shattering into individual cubes during smoothing.</p>
+                    </li>
+                    <li>
+                        <strong class="text-white">Face Culling:</strong>
+                        <p class="text-sm mt-1">The mesher only generates triangles when a Solid voxel touches an Empty voxel. This creates a hollow shell with no internal geometry.</p>
+                    </li>
+                    <li>
+                        <strong class="text-white">Laplacian Smoothing:</strong>
+                        <p class="text-sm mt-1">The algorithm iterates over the welded mesh, pulling vertices toward the average of their neighbors. This turns the blocky grid into smooth, eroded rock.</p>
+                    </li>
+                </ol>
+            </section>
+
+            <!-- SECTION: NOISE -->
+            <section id="noise" class="mb-24 scroll-mt-24">
+                <h1>Noise & Scale Guide</h1>
+                <p>Understanding the relationship between <code>Voxel Size</code> and <code>Noise Frequency</code> is critical to avoiding artifacts.</p>
+
+                <div class="space-y-4 mt-6">
+                    <div class="flex gap-4 p-4 bg-greg-panel border border-greg-border rounded-lg items-start">
+                        <div class="text-2xl h-10 w-10 flex items-center justify-center bg-green-500/10 rounded-full border border-green-500/20">✅</div>
+                        <div>
+                            <strong class="text-green-400 block mb-1">Frequency 0.005</strong>
+                            <p class="text-xs text-slate-500 m-0">Large, majestic caverns. The noise frequency is low enough that multiple voxels form continuous walls.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 bg-greg-panel border border-greg-border rounded-lg items-start">
+                        <div class="text-2xl h-10 w-10 flex items-center justify-center bg-red-500/10 rounded-full border border-red-500/20">❌</div>
+                        <div>
+                            <strong class="text-red-400 block mb-1">Frequency 0.1+</strong>
+                            <p class="text-xs text-slate-500 m-0"><strong>White Noise Artifacts.</strong> If the frequency is too high, the noise changes randomly every single block. This creates isolated floating cubes ("Confetti") that shatter when smoothed.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: SMOOTHING -->
+            <section id="smoothing" class="mb-32 scroll-mt-24">
+                <h1>Organic Smoothing</h1>
+                <p>IOC uses a custom "Relaxation" pass to create rock-like surfaces.</p>
+
+                <h3>Parameters</h3>
+                <ul class="space-y-4">
+                    <li class="bg-greg-panel p-4 rounded border-l-2 border-blue-500">
+                        <span class="text-white font-bold block mb-1">Smooth Iterations</span>
+                        How many times the relaxation kernel runs.
+                        <br><code>0</code> = Minecraft (Blocky).
+                        <br><code>3</code> = Chiseled Rock.
+                        <br><code>10</code> = Melted Wax / Alien Hive.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- SECTION: TROUBLESHOOTING -->
+            <section id="trouble" class="mb-32 scroll-mt-24">
+                <h1>Troubleshooting & FAQ</h1>
+                <p class="text-lg mb-8">
+                    Procedural generation is a balancing act. This guide covers common artifacts.
+                </p>
+
+                <!-- 1. THE SHATTERED GLASS EFFECT -->
+                <div class="mb-12 border-l-4 border-red-500 pl-6 py-2">
+                    <h2 class="text-white mt-0">Visual Artifact: "Shattered Glass" or "Confetti"</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
+                        <!-- SVG Illustration: Shattered -->
+                        <div class="illustration-box h-40 bg-black flex items-center justify-center">
+                            <svg viewBox="0 0 200 100" class="w-full h-full">
+                                <polygon points="20,80 40,20 60,80" fill="none" stroke="#ef4444" stroke-width="2"/>
+                                <polygon points="70,90 90,10 110,60" fill="none" stroke="#ef4444" stroke-width="2"/>
+                                <polygon points="120,70 140,30 160,80" fill="none" stroke="#ef4444" stroke-width="2"/>
+                                <text x="100" y="50" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">DISCONNECTED FACES</text>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-red-400 mt-0">Cause: High Frequency</h3>
+                            <p class="text-sm">Noise Scale is too close to Voxel Size. The math oscillates inside a single cube.</p>
+                            <p class="text-sm"><strong>Fix:</strong> Lower <code>NoiseFrequency</code> to 0.01 or less.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. THE BLOCKY LOOK -->
+                <div class="mb-12 border-l-4 border-blue-500 pl-6 py-2">
+                    <h2 class="text-white mt-0">Visual Artifact: "Minecraft / Voxel Look"</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
+                        <div>
+                            <h3 class="text-blue-400 mt-0">The Problem</h3>
+                            <p class="text-sm">The cave looks like stacked cubes. There are no curves, only 90-degree angles.</p>
+                            
+                            <div class="bg-greg-panel p-4 rounded mt-4">
+                                <code class="text-xs block mb-2 text-slate-500">IOCProceduralActor Settings</code>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Smooth Iterations:</span>
+                                    <span class="text-red-400">0</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-greg-green/10 border border-greg-green/30 p-4 rounded-lg mt-4">
+                                <strong class="text-greg-green block text-xs uppercase tracking-wide mb-1">The Fix</strong>
+                                <p class="text-sm m-0 text-white">Increase <strong>Smooth Iterations</strong> to <span class="bg-white/10 px-1 rounded">3</span> or <span class="bg-white/10 px-1 rounded">5</span>.</p>
+                            </div>
+                        </div>
+
+                        <!-- SVG Illustration: Blocky -->
+                        <div class="illustration-box h-40 bg-black flex items-center justify-center">
+                            <svg viewBox="0 0 200 100" class="w-full h-full">
+                                <rect x="40" y="40" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                                <rect x="60" y="40" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                                <rect x="60" y="20" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                                <text x="100" y="80" fill="#3b82f6" font-size="10" font-family="monospace" text-anchor="middle">NO SMOOTHING</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ ACCORDION -->
+                <div class="space-y-4 mt-16">
+                    <h2 class="text-white border-none mb-6">Frequently Asked Questions</h2>
+
+                    <!-- Q1 -->
+                    <details class="group bg-greg-panel/50 border border-greg-border rounded-lg overflow-hidden transition-all duration-300 open:bg-greg-panel">
+                        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white">
+                            <span class="font-medium text-slate-200">Why does the generation take time?</span>
+                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-greg-border/50 mt-2">
+                            <p>Calculating 3D volume scales cubically. A bounds of 5000x5000x2000 with voxel size 50 is millions of calculations. IOC runs this asynchronously to keep the editor responsive, but the task still takes CPU time to complete.</p>
+                        </div>
+                    </details>
+
+                    <!-- Q2 -->
+                    <details class="group bg-greg-panel/50 border border-greg-border rounded-lg overflow-hidden transition-all duration-300 open:bg-greg-panel">
+                        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white">
+                            <span class="font-medium text-slate-200">How do I make the cave collision work?</span>
+                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-greg-border/50 mt-2">
+                            <p>IOC uses <strong>Complex as Simple</strong> collision. This gives perfect accuracy matching the visible mesh.</p>
+                            <ul class="list-disc ml-4 mt-2">
+                                <li>Ensure your Player Actor has a standard Capsule Component.</li>
+                                <li>Ensure Project Settings > Physics is not set to ignore Complex collision.</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <!-- ABOUT -->
+            <section id="about" class="mb-24 scroll-mt-24 border-t border-greg-border pt-16">
+                <div class="relative bg-[#080c14] rounded-2xl border border-greg-green/20 overflow-hidden p-8 md:p-12 group">
+                    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+                        <div class="flex justify-center lg:justify-start">
+                            <div class="relative w-48 h-48">
+                                <div class="absolute inset-0 rounded-full border border-greg-green/30 animate-[spin_10s_linear_infinite]"></div>
+                                <div class="absolute inset-4 rounded-full border border-dashed border-greg-green/50 animate-[spin_15s_linear_infinite_reverse]"></div>
+                                <div class="absolute inset-0 flex items-center justify-center bg-greg-dark/80 backdrop-blur-sm rounded-full border border-greg-border">
+                                    <h1 class="text-4xl text-greg-green font-bold">IOC</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-2 text-center lg:text-left">
+                            <h2 class="text-3xl font-bold text-white mb-2 tracking-tight">GregOrigin</h2>
+                            <p class="text-lg text-slate-300 mb-6 leading-relaxed">
+                                High-performance C++ plugins for Unreal Engine.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <a href="https://www.gregorigin.com" target="_blank" class="group/btn relative px-4 py-3 bg-[#0f172a] border border-greg-border rounded-lg hover:border-greg-green/50 transition-all duration-300 flex items-center justify-center gap-3">
+                                    <span class="font-mono text-sm group-hover/btn:text-white font-medium z-10">gregorigin.com</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+
+    <script>
+        // Navigation Spy
+        const navLinks = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('section');
+        const mainScroller = document.getElementById('main-scroller');
+        const breadcrumb = document.getElementById('breadcrumb-active');
+
+        setTimeout(() => checkScroll(), 100);
+        mainScroller.addEventListener('scroll', () => checkScroll());
+
+        function checkScroll() {
+            let current = '';
+            sections.forEach(section => {
+                if (mainScroller.scrollTop >= (section.offsetTop - 150)) {
+                    current = '#' + section.getAttribute('id');
+                }
+            });
+
+            if (current) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === current) {
+                        link.classList.add('active');
+                        breadcrumb.textContent = link.textContent.trim();
+                        if (!document.querySelector('#sidebar-nav:hover')) {
+                            link.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -8,7 +8,7 @@ public class InstantOrganicCaves : ModuleRules
     public InstantOrganicCaves(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	//	bUseUnity = false;
+		bUseUnity = false;
 
         // 1. Public Dependencies
         // "PCG" is the only module needed to inherit from UPCGSettings/FPCGSimpleElement
@@ -19,13 +19,15 @@ public class InstantOrganicCaves : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "InputCore",
+                "EnhancedInput",
                 "PCG", // <--- The only PCG module you need here
 				"PhysicsCore",             // Required for Physics Enums
 				"GeometryCore",            // Core Math
 				"GeometryFramework",       // Components (UDynamicMeshComponent)
 				"DynamicMesh",
 				"GeometryScriptingCore",
-                "GeometryAlgorithms"
+                "GeometryAlgorithms",
+                "NavigationSystem"
 
             }
         );
@@ -39,9 +41,17 @@ public class InstantOrganicCaves : ModuleRules
                 "SlateCore",
                	"RenderCore", 
 				"RHI"
-
-  
             }
         );
+
+        if (Target.bBuildEditor)
+        {
+            PrivateDependencyModuleNames.AddRange(new string[]
+            {
+                "UnrealEd",
+                "MeshDescription",       // FMeshDescription, FPolygonGroupID
+                "StaticMeshDescription", // FStaticMeshAttributes
+            });
+        }
     }
 }

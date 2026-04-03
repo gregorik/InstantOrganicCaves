@@ -1,42 +1,68 @@
-// Copyright (c) 2026 GregOrigin. All Rights Reserved.
-
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "PCGSettings.h"
 #include "IOCVoxelCore.generated.h"
 
-// Added 'DisplayName' meta - This fixes the missing name in the palette
+UENUM(BlueprintType)
+enum class EIOCGenerationMode : uint8
+{
+    CellularAutomata UMETA(DisplayName = "Cellular Automata (Classic)"),
+    PerlinTunnel UMETA(DisplayName = "Perlin Tunnel (Smooth)"),
+    InfiniteCellularAutomata UMETA(DisplayName = "Cellular Automata (Infinite/Tileable)")
+};
+
 UCLASS(BlueprintType, ClassGroup = (Procedural), meta = (DisplayName = "IOC Voxel Core"))
 class INSTANTORGANICCAVES_API UIOCVoxelCoreSettings : public UPCGSettings
 {
     GENERATED_BODY()
 
 public:
-    // --- Configuration ---
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Performance")
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings")
+    EIOCGenerationMode GenerationMode = EIOCGenerationMode::CellularAutomata;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings")
     float VoxelSize = 100.0f;
 
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Organic Logic")
+    // --- Cellular Automata Settings ---
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cellular Automata", meta = (EditCondition = "GenerationMode == EIOCGenerationMode::CellularAutomata"))
     float FillProbability = 0.48f;
 
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Organic Logic")
-    int32 SmoothingIterations = 3;
-
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Organic Logic")
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cellular Automata", meta = (EditCondition = "GenerationMode == EIOCGenerationMode::CellularAutomata"))
     int32 CaveSeed = 42;
 
-    // --- VISIBILITY FIX ---
-    // 1. Define the Type. 'Spatial' ensures it appears near Samplers/Spawners.
-    virtual EPCGSettingsType GetType() const override { return EPCGSettingsType::Spatial; }
+    // --- Perlin Tunnel Settings ---
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Perlin Tunnel", meta = (EditCondition = "GenerationMode == EIOCGenerationMode::PerlinTunnel"))
+    FVector TunnelStart = FVector(0, 0, 0);
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Perlin Tunnel", meta = (EditCondition = "GenerationMode == EIOCGenerationMode::PerlinTunnel"))
+    FVector TunnelEnd = FVector(1000, 1000, 1000);
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Perlin Tunnel", meta = (EditCondition = "GenerationMode == EIOCGenerationMode::PerlinTunnel"))
+    float TunnelRadius = 300.0f;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Perlin Tunnel", meta = (EditCondition = "GenerationMode == EIOCGenerationMode::PerlinTunnel"))
+    float WallThickness = 50.0f;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Perlin Tunnel", meta = (EditCondition = "GenerationMode == EIOCGenerationMode::PerlinTunnel"))
+    float NoiseFrequency = 0.1f;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Perlin Tunnel", meta = (EditCondition = "GenerationMode == EIOCGenerationMode::PerlinTunnel"))
+    float NoiseThreshold = 0.5f;
+
+    // --- Infinite CA Settings ---
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Infinite CA",
+        meta = (EditCondition = "GenerationMode == EIOCGenerationMode::InfiniteCellularAutomata"))
+    FVector WorldOriginOffset = FVector::ZeroVector;
+
+    // Common
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings")
+    int32 SmoothingIterations = 3;
 
 #if WITH_EDITOR
-    // 2. Editor UI Text (The Safe Way)
+    virtual EPCGSettingsType GetType() const override { return EPCGSettingsType::Spatial; }
     virtual FText GetDefaultNodeTitle() const override { return NSLOCTEXT("IOC", "NodeTitle", "IOC Voxel Core"); }
-    virtual FText GetNodeTooltipText() const override { return NSLOCTEXT("IOC", "NodeTooltip", "High-performance cellular automata cave generator."); }
 #endif
 
-    // --- Internal Factory ---
     virtual FPCGElementPtr CreateElement() const override;
 };
