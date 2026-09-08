@@ -27,7 +27,9 @@ public class InstantOrganicCaves : ModuleRules
 				"DynamicMesh",
 				"GeometryScriptingCore",
                 "GeometryAlgorithms",
-                "NavigationSystem"
+                "NavigationSystem",
+                "DeveloperSettings",
+                "NetCore"                  // FFastArraySerializer
 
             }
         );
@@ -46,9 +48,17 @@ public class InstantOrganicCaves : ModuleRules
 
         if (Target.bBuildEditor)
         {
+            // Editor UI (the setup wizard, the Tools menu, validation) now lives in the
+            // InstantOrganicCavesEditor module. What remains here is the WITH_EDITOR bake
+            // path on AIOCProceduralActor, which genuinely has to sit on the runtime actor
+            // because it is a CallInEditor UFUNCTION -- so it keeps the asset-authoring
+            // dependencies, and nothing else. ToolMenus, LevelEditor and ApplicationCore
+            // are gone.
             PrivateDependencyModuleNames.AddRange(new string[]
             {
-                "UnrealEd",
+                "UnrealEd",              // GEditor, ObjectTools for the bake
+                "AssetRegistry",         // registering the baked asset
+                "AssetTools",            // CreateUniqueAssetName
                 "MeshDescription",       // FMeshDescription, FPolygonGroupID
                 "StaticMeshDescription", // FStaticMeshAttributes
             });

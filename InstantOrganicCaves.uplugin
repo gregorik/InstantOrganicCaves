@@ -1,14 +1,16 @@
 {
 	"FileVersion": 3,
-	"Version": 2,
-	"VersionName": "0.3.0",
+	"Version": 8,
+	"VersionName": "0.4.0",
 	"FriendlyName": "Instant Organic Caves",
-	"Description": "High-performance C++ Cellular Automata for procedural environments.",
+	"Description": "High-performance C++ Cellular Automata and Perlin-noise cave generator for procedural environments.",
 	"Category": "Procedural",
 	"CreatedBy": "GregOrigin",
-	"DocsURL": "https://gregorigin.com/InstantOrganicCaves/",
+	"CreatedByURL": "www.gregorigin.com",
+	"DocsURL": "https://gregorigin.com/Manuals/InstantOrganicCaves",
 	"MarketplaceURL": "com.epicgames.launcher://ue/Fab/product/016b22dc-d04c-41fa-857c-d4f391a96c12",
-	"EngineVersion": "5.7.0",
+	"SupportURL": "https://discord.gg/nqYQ5mtmHb",
+	"EngineVersion": "5.5.0",
 	"CanContainContent": true,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
@@ -18,6 +20,12 @@
 			"Name": "InstantOrganicCaves",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
+			"PlatformAllowList": [ "Win64", "Mac", "Linux" ]
+		},
+		{
+			"Name": "InstantOrganicCavesEditor",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit",
 			"PlatformAllowList": [ "Win64", "Mac", "Linux" ]
 		}
 	],

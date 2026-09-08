@@ -2,7 +2,7 @@
 ![image](https://img.shields.io/badge/-Unreal%20Engine-313131?style=for-the-badge&logo=unreal-engine&logoColor=blue) ![image](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=blue) ![image](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue) ![image](https://img.shields.io/badge/json-5E5C5C?style=for-the-badge&logo=json&logoColor=white) ![image](https://img.shields.io/badge/MIT-green?style=for-the-badge) ![alt text](https://img.shields.io/github/stars/gregorik/InstantOrganicCaves) ![alt text](https://img.shields.io/badge/Support-Patreon-red) [![YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=flat&logo=youtube)](https://www.youtube.com/@agregori) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C616ULD4)
 
 
-**A high-performance, strictly programmatic voxel environment generator for Unreal Engine 5.7.**
+**A high-performance, strictly programmatic voxel environment generator for Unreal Engine 5.5 through 5.8.**
 
 [Intro video 1 (really old and basic)](https://www.youtube.com/watch?v=xURtHTS8Stk) <br>
 [Update video 1](https://www.youtube.com/watch?v=-H_Fm3QvMXA) <br>
@@ -20,124 +20,106 @@ It builds geometry directly using Unreal's `FDynamicMesh3` core math libraries, 
 
  <br><br>
 
-| <i><b>Comparison | <i><b>GitHub version (0.1+ MIT)           | <i>[FAB edition](https://www.fab.com/listings/016b22dc-d04c-41fa-857c-d4f391a96c12) (0.3+ Closed)</b></i>                |
+| <i><b>Comparison | <i><b>GitHub version (0.4+ MIT)           | <i>[FAB edition](https://www.fab.com/listings/016b22dc-d04c-41fa-857c-d4f391a96c12) (Fab)</b></i>                |
 |:---|:---|:---|
-| **Version** | Core | Fully featured + updated |
-| **Distribution** | Source only | Binaries, vetted by Epic |
-| **Engine support** | UE 5.7.0 | UE 5.6 - 5.7.3+ |
+| **Version** | v0.4.0 (Full Source) | v0.4.0 (Vetted Distribution) |
+| **Distribution** | Source only (Build from source) | Pre-built binaries, launcher install |
+| **Engine support** | UE 5.5 – 5.8 | UE 5.5 – 5.8 |
 | **Procedural Perlin caves/tunnels** | Included | Included |
 | **Cellular automata caves** | Included | Included |
 | **PCG Integration** | Included | Included |
 | **Edge falloff / Clean shells** | Included | Included |
 | **Debug visualization** | Included | Included | 
-| **Multi-Spline Branching** | n/a | Included |
-| **Infinite/tileable cellular automata** | n/a | Included |
-| **Domain warp & terraces** | n/a | Included | 
-| **Async generation** | n/a | Included |
-| **Async decoration scattering** | n/a | Included |
-| **LOD mesh generation** | n/a | Included |
-| **Complex-as-Simple Collision** | n/a | Included |
-| **Streaming Manager** | n/a | Included |
-| **Auto UV's** | n/a | Included |
-| **Runtime Carving API** | n/a | Included |
-| **Carving Volume Component** | n/a | Included |
-| **5 Built-in Presets** | n/a | Included |
-| **Smart Vertex Colors** | n/a | Included |
-| **Updates** | n/a | Regular, vetted by Epic |
-| **Quality Assurance** | GitHub Issues | Vetted by Epic, tested by author |
-| **Support** | GitHub Issues | Forum & Email |
+| **Multi-Spline Branching** | Included | Included |
+| **Infinite/tileable cellular automata** | Included | Included |
+| **Domain warp & terraces** | Included | Included | 
+| **Async generation** | Included | Included |
+| **Async decoration scattering** | Included | Included |
+| **Original Scatter Mesh Library (8 meshes)** | Included | Included |
+| **LOD mesh generation** | Included | Included |
+| **Complex-as-Simple Collision** | Included | Included |
+| **Streaming Manager** | Included | Included |
+| **Auto UV's (Triplanar)** | Included | Included |
+| **Runtime Carving API & FastArray Replication** | Included | Included |
+| **Carving Volume Component** | Included | Included |
+| **5 Built-in Presets** | Included | Included |
+| **Smart Vertex Colors** | Included | Included |
+| **Setup Wizard & Slate UI** | Included | Included |
+| **Interactive Demo Map & Showcase** | Included | Included |
+| **Laplacian CSR (10x faster) & Voxel Cache** | Included | Included |
+| **21 Automated Verification Tests** | Included | Included |
+| **Interactive HTML Tutorial & Manual** | Included | Included |
+| **Updates** | GitHub Releases | Regular, vetted by Epic |
+| **Support** | GitHub Issues | Discord & Fab |
 <br><br>
 
 ## ✨ Key Features
 
-*   **Pure C++ Architecture:** No dependency on Blueprint logic, PCG Graphs, or external assets. The geometry is calculated mathematically from scratch.
-*   **Direct Dynamic Mesh Manipulation:** Operates directly on `UE::Geometry::FDynamicMesh3` for maximum performance.
-*   **Infinite World Generation:** Supports seamless chunk tiling using world-space Perlin Noise.
-*   **Organic Smoothing:** Implements custom, stable Laplacian Smoothing to convert blocky voxel grids into smooth, eroded cavern walls.
-*   **Welded Topology:** Custom meshing algorithm ensures watertight geometry with no internal faces, preventing shading artifacts and mesh tearing.
-*   **Nanite & Lumen Ready:** programmatically enables Nanite support on generated meshes.
+*   **Pure C++ Architecture:** Operates directly on `UE::Geometry::FDynamicMesh3` for maximum performance, with zero blueprint VM overhead.
+*   **Integrated Setup Wizard:** 5-step guided Slate wizard (`Window -> IOC Setup Wizard...`) with preflight voxel workload estimation, 3D preview, risk analysis, and one-click recommended fixes.
+*   **Shipped Interactive Demo Map:** Open `/InstantOrganicCaves/Maps/IOC_DemoMap` and press Play for an automated 8-section feature tour (`IOCShowcaseLauncher`).
+*   **Optimized Carving Engine (v0.4.0):** 1.7x faster carve latency (118 ms vs 200 ms) via compressed-sparse-row (CSR) Laplacian smoothing with `ParallelFor` and bit-packed `FIOCVoxelCache`.
+*   **Replicated Multiplayer Carving:** `FIOCCarveHistory` FastArray replication ensures synchronized carve history for late-joining players.
+*   **Shipped Procedural Scatter Library:** 8 original baked GeometryScripting meshes (`SM_IOC_*` rocks, stalactites, stalagmites, geodes, crystals) with LODs and simple collision—completely free of third-party art dependencies.
+*   **Multi-Spline & Path Branching:** Generate complex tunnel networks following arbitrary 3D curves and branches.
+*   **Domain Warping & Terracing:** Create alien hives, canyon strata, and stepped cavern topography with multi-octave fBm noise.
+*   **Smart Triplanar Materials & Vertex Colors:** Pre-configured materials with runtime usage flags, two-sided rendering, and smart vertex colors (Wall, Floor, Ceiling).
+*   **Multiplayer Chunk Streaming:** `AIOCStreamingManager` provides distance-based chunk loading, unload hysteresis, and safe player tracking.
+*   **In-Editor Static Mesh Baking:** Convert procedural runtime caves into permanent Nanite-enabled static meshes with collision and lightmap UVs under `/Game/IOC_Baked`.
+*   **Engine Floor UE 5.5–5.8:** Assets authored natively on UE 5.5 floor to guarantee compatibility across all modern Unreal Engine versions.
 
 ## 📦 Installation
 
-1.  **Prerequisites:** Unreal Engine **5.7** (Source or Launcher) and Visual Studio 2022.
+1.  **Prerequisites:** Unreal Engine **5.5, 5.6, 5.7, or 5.8** and Visual Studio 2022.
 2.  **Clone:** Clone this repository into your project's `Plugins` folder:
     ```bash
     YourProject/Plugins/InstantOrganicCaves
     ```
 3.  **Regenerate:** Right-click your `.uproject` file and select **Generate Visual Studio Project Files**.
-4.  **Build:** Open the solution in Visual Studio and build the project. The plugin handles dependencies on `GeometryCore`, `DynamicMesh`, and `PhysicsCore` automatically.
-5.  **Enable:** Launch the Editor, go to **Edit > Plugins**, and ensure **Instant Organic Caves** is enabled.
+4.  **Build:** Build your project solution in Visual Studio or launch Unreal Editor (it will compile the plugin automatically).
+5.  **Enable:** Go to **Edit > Plugins** and ensure **Instant Organic Caves** is enabled.
 
 ## 🚀 Quick Start
 
-### 1. Single Chunk Generation
-1.  In a New Scene, open the **Place Actors** panel.
-2.  Search for `IOCProceduralActor`.
-3.  Drag it into the viewport.
-4.  A cave chunk will generate immediately. Use the **Details Panel** to adjust settings like `Seed`, `Roughness`, and `Cave Size`.
+### 1. Interactive Demo Map (Fastest)
+1. In Unreal Editor, go to **Tools > Instant Organic Caves > Open Demo Map**.
+2. Press **Play (PIE)**.
+3. Enjoy the automated 8-section cinematic showcase highlighting all cave generator features.
 
-### 2. Infinite World Generation
-1.  Search for `IOCWorldGenerator` in the Class list.
-2.  Drag it into the level.
-3.  In the Details Panel:
-    *   Set **Chunk Class** to `IOCProceduralActor`.
-    *   Set **Render Distance** (e.g., `2` for a 5x5 grid).
-    *   Set **Update Interval** (e.g., `0.5` seconds).
-4.  Press **Play**. As the camera moves, new cave chunks will form ahead of you seamlessly.
+### 2. IOC Setup Wizard
+1. Open **Window > IOC Setup Wizard...** (or run console command `IOC.OpenSetupWizard`).
+2. Step through the 5-step guided setup: choose a preset, configure bounds, review estimated voxel counts, and spawn your first cave.
 
-## ⚙️ Configuration Guide
+### 3. Drag-and-Drop Workflow
+1. In the **Place Actors** panel, search for `IOCProceduralActor`.
+2. Drag it into the viewport.
+3. Select any of the 5 built-in presets in the Details panel:
+   - `LargeTunnel`
+   - `TightCrawl`
+   - `OpenCavern`
+   - `AlienHive`
+   - `CanyonStrata`
 
-The `IOCProceduralActor` exposes several critical parameters to control the algorithm:
+### 4. Console Commands
+| Command | Description |
+| :--- | :--- |
+| `IOC.OpenSetupWizard` | Opens the Slate Setup Wizard window |
+| `IOC.SpawnShowcase` | Spawns the 8-section product showcase tour |
+| `IOC.ClearShowcase` | Removes showcase actors and restores camera |
+| `IOC.ClearAllDemos` | Removes all demo caves and characters cleanly |
+| `IOC.SpawnTunnelDemo` | Spawns an instant path-driven tunnel demo |
+| `IOC.SpawnSpectacular` | Spawns a domain-warped alien hive cavern |
+| `IOC.ValidateInstallation` | Verifies plugin assets, modules, and engine floor integrity |
 
-### Generation Settings
-| Parameter | Default | Description |
-| :--- | :--- | :--- |
-| **Grid Size** | `60` | The resolution of the chunk (X, Y, Z). Higher values = more detail but higher RAM usage. |
-| **Voxel Size** | `100.0` | The size of a single logic unit in World Space (cm). |
-| **Dimensions** | `60,60,60` | Allows for non-cubic chunks (e.g., creating long corridors). |
+## 📚 Documentation & Tutorial
 
-### Noise & Shape
-| Parameter | Default | Description |
-| :--- | :--- | :--- |
-| **Noise Scale** | `2500.0` | **Critical.** Controls the size of the tunnels. <br>• **2500+**: Large, open caverns.<br>• **1000**: Tight, winding tunnels.<br>• **<100**: Will cause white noise/fragmentation. |
-| **Noise Threshold** | `0.5` | The "Air vs. Solid" cutoff. Lower values make thicker walls. |
-| **Fill Probability** | `0.45` | Impact of the initial cellular automata seeding pass. |
-
-### Organic Processing
-| Parameter | Default | Description |
-| :--- | :--- | :--- |
-| **Smooth Iterations** | `5` | How many times the Laplacian smoothing kernel runs. <br>• **0**: Minecraft/Blocky look.<br>• **5**: Organic/Melted rock look. |
-| **Surface Roughness**| `1.0` | Adds jitter to vertices before smoothing to simulate natural erosion. |
-
-## 🧠 Technical Architecture
-
-Calculations differ from standard Marching Cubes to allow for specific artistic styles:
-
-1.  **Noise Sampling:** We sample 3D Perlin Noise in World Space. To prevent "Integer Lattice" artifacts (zebra striping), coordinate sampling is jittered by a prime-number vector offset.
-2.  **Cellular Automata:** A pass of 3D Cellular Automata runs on the voxel data to clean up noise and form coherent structures.
-3.  **Face Culling & Welding:**
-    *   The mesher iterates over the grid.
-    *   Faces are only generated if a solid voxel neighbors an air voxel.
-    *   **Crucial:** A `VertexMap` is employed to reuse vertex indices. This "Welds" the mesh topology, ensuring that adjacent cubes share vertices. This allows the smoothing algorithm to act on the mesh as a continuous skin rather than separate blocks.
-4.  **Laplacian Smoothing:** A custom, dependency-free smoothing algorithm iterates over the vertex connectivity graph, relaxing vertex positions toward the average of their neighbors to create organic curves.
-
-## ⚠️ Troubleshooting / FAQ
-
-**Q: The mesh looks shattered or like floating confetti.**
-*   **A:** Your `Noise Scale` is likely too low relative to your `Voxel Size`. If the noise frequency is too high, the algorithm generates isolated, single-voxel islands that collapse during smoothing. **Increase Noise Scale to 2500.0 or higher.**
-
-**Q: I see "Zebra Stripes" or repeating patterns.**
-*   **A:** This is Perlin harmonic alignment. Ensure you are using the latest version of the code which includes the `Origin` coordinate jitter fix in `GenerateCave()`.
-
-**Q: Collision isn't working.**
-*   **A:** IOC uses `ComplexAsSimple` for collision. Ensure your Player Pawn has a valid collision capsule and physics are enabled.
+* **Interactive Tutorial:** Open `Resources/Docs/tutorial.html` in any web browser for an interactive preset explorer, cross-section visualizer, and voxel budget calculator.
+* **Full Manual:** Open `Resources/Docs/index.html` (or via **Tools > Instant Organic Caves > Open Documentation**) for complete API and property references.
+* **Demo Guide:** Check `Resources/Docs/IOC_DEMO_GUIDE.md` for a walkthrough of all showcase sections.
 
 ## 🤝 Contributing
 
-This is an open-source project. Pull requests are welcome, particularly for:
-*   Async background thread generation (TaskGraph integration).
-*   LOD handling for the Infinite World Generator.
-*   Biomes support (varying noise parameters based on world position).
+Pull requests and issues are welcome! See `Changelog.md` for full version history and `PRODUCTION_READINESS.md` for architectural contracts.
 
 ## 📜 License
 

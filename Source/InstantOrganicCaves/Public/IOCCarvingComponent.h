@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "Net/Serialization/FastArraySerializer.h"
 #include "IOCCarvingComponent.generated.h"
 
 UENUM(BlueprintType)
@@ -14,16 +15,105 @@ enum class EIOCCarvingShape : uint8
     Capsule UMETA(DisplayName = "Capsule")
 };
 
-/** Thread-safe POD snapshot of a carving volume. Passed by value into the async lambda. */
-struct FIOCCarvingCapture
+/**
+ * Serializable, replicable snapshot of a carving volume.
+ *
+ * The generator only reads copies of this struct on worker threads. Keeping the
+ * runtime carve representation as reflected data also makes authoritative carve
+ * history persistable and suitable for initial/late-join replication.
+ */
+USTRUCT(BlueprintType)
+struct INSTANTORGANICCAVES_API FIOCCarvingCapture
 {
-    EIOCCarvingShape ShapeType    = EIOCCarvingShape::Sphere;
-    FTransform       WorldTransform;
-    float            SphereRadius    = 200.f;
-    FVector          BoxExtent       = FVector(200.f);
-    float            CapsuleRadius   = 100.f;
-    float            CapsuleHalfHeight = 200.f;
-    float            FalloffRadius   = 50.f;
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "IOC|Carving")
+    EIOCCarvingShape ShapeType = EIOCCarvingShape::Sphere;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "IOC|Carving")
+    FTransform WorldTransform = FTransform::Identity;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "IOC|Carving", meta=(ClampMin="1.0"))
+    float SphereRadius = 200.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "IOC|Carving")
+    FVector BoxExtent = FVector(200.f);
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "IOC|Carving", meta=(ClampMin="1.0"))
+    float CapsuleRadius = 100.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "IOC|Carving", meta=(ClampMin="1.0"))
+    float CapsuleHalfHeight = 200.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "IOC|Carving", meta=(ClampMin="0.0"))
+    float FalloffRadius = 50.f;
+};
+
+/**
+ * One entry in a replicated carve history.
+ *
+ * Wrapping FIOCCarvingCapture in a FFastArraySerializerItem is what allows the history to
+ * replicate as a delta. A plain TArray<FIOCCarvingCapture> resends the whole array whenever
+ * any element changes, so one carve against a 256-entry history pushed roughly 25 KB to every
+ * relevant client, every time.
+ */
+USTRUCT(BlueprintType)
+struct INSTANTORGANICCAVES_API FIOCCarveHistoryItem : public FFastArraySerializerItem
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "IOC|Carving")
+    FIOCCarvingCapture Carve;
+};
+
+/**
+ * Delta-replicated carve history.
+ *
+ * Only PostReplicatedReceive is implemented, rather than the per-operation add/change/remove
+ * hooks: the cave's response to any change is the same (its geometry is stale), and this hook
+ * fires exactly once per received update instead of once per affected element.
+ *
+ * Owner is deliberately NotReplicated. The client fills it in from the actor that owns this
+ * struct; replicating a pointer back to that actor would be circular.
+ */
+USTRUCT(BlueprintType)
+struct INSTANTORGANICCAVES_API FIOCCarveHistory : public FFastArraySerializer
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly, SaveGame, Category = "IOC|Carving")
+    TArray<FIOCCarveHistoryItem> Items;
+
+    UPROPERTY(NotReplicated)
+    TObjectPtr<class AIOCProceduralActor> Owner = nullptr;
+
+    bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParms)
+    {
+        return FFastArraySerializer::FastArrayDeltaSerialize<FIOCCarveHistoryItem, FIOCCarveHistory>(
+            Items, DeltaParms, *this);
+    }
+
+    void PostReplicatedReceive(const FFastArraySerializer::FPostReplicatedReceiveParameters&);
+
+    // --- Read helpers, so calling code reads much like the old TArray ---
+    int32 Num() const { return Items.Num(); }
+    bool IsEmpty() const { return Items.IsEmpty(); }
+
+    /** Flattens to plain captures. The generator only ever reads copies on worker threads. */
+    void AppendCapturesTo(TArray<FIOCCarvingCapture>& Out) const
+    {
+        Out.Reserve(Out.Num() + Items.Num());
+        for (const FIOCCarveHistoryItem& Item : Items)
+        {
+            Out.Add(Item.Carve);
+        }
+    }
+};
+
+template<>
+struct TStructOpsTypeTraits<FIOCCarveHistory> : public TStructOpsTypeTraitsBase2<FIOCCarveHistory>
+{
+    enum { WithNetDeltaSerializer = true };
 };
 
 /**
