@@ -1,0 +1,166 @@
+{
+  "assets": {
+    "SM_IOC_Crystal_A": {
+      "family": "crystal",
+      "params": {
+        "height": [
+          55.0,
+          100.0
+        ],
+        "radius": [
+          7.0,
+          12.0
+        ],
+        "shards": 6,
+        "tilt": 14.0,
+        "tris": 900
+      },
+      "seed": 2001
+    },
+    "SM_IOC_Crystal_B": {
+      "family": "crystal",
+      "params": {
+        "height": [
+          22.0,
+          42.0
+        ],
+        "radius": [
+          8.0,
+          14.0
+        ],
+        "shards": 5,
+        "tilt": 20.0,
+        "tris": 750
+      },
+      "seed": 2002
+    },
+    "SM_IOC_Geode": {
+      "family": "geode",
+      "params": {
+        "cavity": 0.62,
+        "coarse": [
+          6.6,
+          0.037
+        ],
+        "fine": [
+          2.4,
+          0.117
+        ],
+        "radius": 37.0,
+        "tris": 1800
+      },
+      "seed": 3001
+    },
+    "SM_IOC_Rock_A": {
+      "family": "rock",
+      "params": {
+        "coarse": [
+          13.0,
+          0.021
+        ],
+        "fine": [
+          4.2,
+          0.072
+        ],
+        "radius": 58.0,
+        "squash": [
+          1.25,
+          1.0,
+          0.72
+        ],
+        "tris": 2200
+      },
+      "seed": 1001
+    },
+    "SM_IOC_Rock_B": {
+      "family": "rock",
+      "params": {
+        "coarse": [
+          8.5,
+          0.033
+        ],
+        "fine": [
+          2.7,
+          0.107
+        ],
+        "radius": 35.0,
+        "squash": [
+          1.0,
+          1.15,
+          0.85
+        ],
+        "tris": 1500
+      },
+      "seed": 1002
+    },
+    "SM_IOC_Rock_C": {
+      "family": "rock",
+      "params": {
+        "coarse": [
+          4.3,
+          0.06
+        ],
+        "fine": [
+          1.5,
+          0.19
+        ],
+        "radius": 17.0,
+        "squash": [
+          1.1,
+          0.95,
+          0.8
+        ],
+        "tris": 700
+      },
+      "seed": 1003
+    },
+    "SM_IOC_Stalactite": {
+      "family": "spike",
+      "params": {
+        "base_radius": 21.0,
+        "hanging": true,
+        "height": 150.0,
+        "noise": [
+          2.6,
+          0.037
+        ],
+        "tris": 800
+      },
+      "seed": 4001
+    },
+    "SM_IOC_Stalagmite": {
+      "family": "spike",
+      "params": {
+        "base_radius": 26.0,
+        "hanging": false,
+        "height": 110.0,
+        "noise": [
+          3.0,
+          0.035
+        ],
+        "tris": 800
+      },
+      "seed": 4002
+    }
+  },
+  "generator": "GenerateScatterMeshes.py",
+  "note": "Regenerate any asset exactly by re-running with these seeds.",
+  "triangle_budgets": {
+    "crystal": [
+      200,
+      1500
+    ],
+    "geode": [
+      400,
+      3000
+    ],
+    "rock": [
+      400,
+      3000
+    ],
+    "spike": [
+      200,
+      1500
+    ]
+  }
+}

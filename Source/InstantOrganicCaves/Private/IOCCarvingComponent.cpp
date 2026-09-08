@@ -1,11 +1,27 @@
 // Copyright (c) 2026 GregOrigin. All Rights Reserved.
 
 #include "IOCCarvingComponent.h"
+#include "IOCProceduralActor.h"
 #include "DrawDebugHelpers.h"
 
 UIOCCarvingComponent::UIOCCarvingComponent()
 {
+#if WITH_EDITOR
     PrimaryComponentTick.bCanEverTick = true;
+#else
+    PrimaryComponentTick.bCanEverTick = false;
+#endif
+}
+
+void FIOCCarveHistory::PostReplicatedReceive(
+    const FFastArraySerializer::FPostReplicatedReceiveParameters& /*Parameters*/)
+{
+    // Add, remove or in-place edit all mean the same thing to the cave: the carve set moved
+    // and its geometry is stale. RequestCarveRebuild coalesces bursts.
+    if (Owner)
+    {
+        Owner->RequestCarveRebuild();
+    }
 }
 
 FIOCCarvingCapture UIOCCarvingComponent::MakeCapture() const

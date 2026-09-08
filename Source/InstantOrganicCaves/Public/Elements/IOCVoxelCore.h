@@ -1,3 +1,4 @@
+// Copyright (c) 2026 GregOrigin. All Rights Reserved.
 #pragma once
 
 #include "CoreMinimal.h"
@@ -58,6 +59,11 @@ public:
     // Common
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings")
     int32 SmoothingIterations = 3;
+
+    /** Hard ceiling on the working grid. Generation is rejected (with a graph error) rather than
+     *  allowed to exhaust memory. Includes the smoothing halo in Infinite mode. */
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings", meta = (ClampMin = "1000", ClampMax = "15000000"))
+    int32 MaxVoxelCount = 15000000;
 
 #if WITH_EDITOR
     virtual EPCGSettingsType GetType() const override { return EPCGSettingsType::Spatial; }

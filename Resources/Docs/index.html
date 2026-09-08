@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instant Organic Caves // Documentation</title>
-    
-    <!-- 1. Tailwind CDN -->
+    <title>Instant Organic Caves — Manual</title>
+    <meta name="description" content="Complete documentation for Instant Organic Caves — procedural cave generation plugin for Unreal Engine 5.5, 5.6, 5.7.">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- 2. Prism (Syntax Highlighting) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-    
-    <!-- 3. Configuration -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
@@ -21,658 +19,936 @@
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        'greg-dark': '#0B1120',
-                        'greg-panel': '#0f172a',
-                        'greg-border': '#1e293b',
-                        'greg-green': '#10b981',
-                        'greg-green-dim': '#059669',
-                    },
-                    animation: {
-                        'blob': 'blob 7s infinite',
-                        'scan': 'scan 4s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        scan: {
-                            '0%, 100%': { transform: 'translateY(0%)' },
-                            '50%': { transform: 'translateY(100%)' },
-                        }
+                        'cave-bg':     '#080c14',
+                        'cave-panel':  '#0d1422',
+                        'cave-border': '#1a2540',
+                        'cave-green':  '#10b981',
+                        'cave-blue':   '#3b82f6',
+                        'cave-amber':  '#f59e0b',
+                        'cave-purple': '#8b5cf6',
+                        'cave-red':    '#ef4444',
                     }
                 }
             }
         }
     </script>
 
-    <!-- 4. Styles -->
     <style type="text/tailwindcss">
-        /* Base */
-        body { 
-            @apply bg-greg-dark text-slate-400 selection:bg-greg-green selection:text-white font-sans; 
-        }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0B1120; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        body { @apply bg-cave-bg text-slate-400 font-sans selection:bg-cave-green/30 selection:text-white; }
 
-        /* Content Typography */
-        .doc-content h1 { @apply text-3xl font-bold text-white mb-6 border-b border-greg-border pb-4 flex items-center gap-3 tracking-tight; }
-        .doc-content h2 { @apply text-xl font-semibold text-white mt-12 mb-4 flex items-center gap-2 cursor-pointer border-l-2 border-transparent hover:border-greg-green pl-0 hover:pl-3 transition-all duration-300; }
-        .doc-content h3 { @apply text-lg font-medium text-greg-green mt-8 mb-3 flex items-center gap-2; }
-        .doc-content p { @apply leading-7 mb-4 text-slate-400; }
-        .doc-content ul { @apply list-disc list-outside ml-5 mb-4 space-y-2 marker:text-slate-600; }
-        
-        /* Code & Pre */
-        code { @apply bg-[#0D1117] text-greg-green text-sm px-1.5 py-0.5 rounded font-mono border border-greg-border; }
-        pre { @apply bg-[#0D1117] p-4 rounded-lg overflow-x-auto border border-greg-border mb-6 shadow-xl; }
-        
-        /* Interactive Visuals */
-        .illustration-box { @apply w-full bg-[#080c14] border border-greg-border rounded-xl overflow-hidden relative mb-8 shadow-2xl; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #080c14; }
+        ::-webkit-scrollbar-thumb { background: #1a2540; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2a3f60; }
 
-        /* Navigation */
-        .nav-item { 
-            @apply flex items-center gap-3 px-4 py-2 text-sm font-medium border-l-2 border-transparent transition-all duration-200 cursor-pointer opacity-60 hover:opacity-100 hover:text-white; 
+        .doc h1  { @apply text-2xl font-bold text-white mb-5 pb-3 border-b border-cave-border flex items-center gap-3 tracking-tight; }
+        .doc h2  { @apply text-lg font-semibold text-white mt-10 mb-3 flex items-center gap-2; }
+        .doc h3  { @apply text-base font-medium text-cave-green mt-6 mb-2; }
+        .doc p   { @apply leading-7 mb-4 text-slate-400; }
+        .doc ul  { @apply list-disc list-outside ml-5 mb-4 space-y-1.5 marker:text-cave-border; }
+        .doc ol  { @apply list-decimal ml-5 mb-4 space-y-2; }
+        .doc li  { @apply text-slate-400; }
+        code     { @apply bg-[#0a0f1c] text-cave-green text-sm px-1.5 py-0.5 rounded font-mono border border-cave-border; }
+        pre      { @apply bg-[#0a0f1c] p-4 rounded-lg overflow-x-auto border border-cave-border mb-5 shadow-xl text-sm; }
+        pre code { @apply bg-transparent border-0 p-0 text-sm; }
+
+        .badge-new    { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-cave-green/15 text-cave-green border border-cave-green/30 uppercase tracking-wide; }
+        .badge-ue     { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-cave-blue/15 text-cave-blue border border-cave-blue/30 uppercase tracking-wide; }
+        .badge-warn   { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-cave-amber/15 text-cave-amber border border-cave-amber/30 uppercase tracking-wide; }
+        .badge-net    { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-cave-purple/15 text-cave-purple border border-cave-purple/30 uppercase tracking-wide; }
+
+        .callout-tip  { @apply bg-cave-green/5 border border-cave-green/25 rounded-lg p-4 mb-5 text-sm text-slate-300; }
+        .callout-warn { @apply bg-cave-amber/5 border border-cave-amber/25 rounded-lg p-4 mb-5 text-sm text-slate-300; }
+        .callout-info { @apply bg-cave-blue/5 border border-cave-blue/25 rounded-lg p-4 mb-5 text-sm text-slate-300; }
+        .callout-net  { @apply bg-cave-purple/5 border border-cave-purple/25 rounded-lg p-4 mb-5 text-sm text-slate-300; }
+
+        .prop-table   { @apply w-full text-sm border-collapse mb-6; }
+        .prop-table thead tr { @apply border-b border-cave-border text-xs uppercase tracking-widest text-slate-500; }
+        .prop-table tbody tr { @apply border-b border-cave-border/40 hover:bg-white/[0.02] transition-colors; }
+        .prop-table td  { @apply py-3 pr-4 align-top; }
+        .prop-table td:first-child { @apply font-mono text-white text-xs w-1/3 pt-3.5; }
+
+        .section-hero { @apply w-full bg-[#050810] border border-cave-border rounded-xl overflow-hidden relative mb-8 shadow-2xl; }
+
+        /* Cave wall behind the sidebar lockup. The gradient does the legibility work, so the
+           texture can stay at full strength underneath instead of being faded to mud. */
+        .brand-block::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(160deg, rgba(13,20,34,.62) 0%, rgba(13,20,34,.88) 55%, rgba(13,20,34,.97) 100%),
+                url('ioc-rock.jpg');
+            background-size: cover;
+            background-position: center;
+            pointer-events: none;
         }
-        .nav-item.active { 
-            @apply text-greg-green border-greg-green bg-greg-green/5 opacity-100; 
-        }
+
+        .nav-group-title { @apply text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-1.5 px-4 pt-2; }
+        .nav-link { @apply flex items-center gap-2 px-4 py-1.5 text-[13px] font-medium border-l-2 border-transparent transition-all duration-150 cursor-pointer text-slate-500 hover:text-slate-200 hover:border-cave-border; }
+        .nav-link.active { @apply text-cave-green border-cave-green bg-cave-green/5 !important; }
+        .nav-link.sub { @apply pl-8 text-xs text-slate-600 py-1; }
+        .nav-link.sub.active { @apply text-cave-green border-cave-green bg-cave-green/5; }
     </style>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 </head>
-<body class="h-screen flex flex-col md:flex-row overflow-hidden text-slate-400">
 
-    <!-- SIDEBAR -->
-    <aside class="w-full md:w-80 bg-greg-panel border-r border-greg-border flex-shrink-0 flex flex-col h-full z-20">
-        
-        <!-- HEADER -->
-        <div class="p-6 border-b border-greg-border bg-greg-panel/50">
-            <a href="www.gregorigin.com" class="text-xs font-mono text-slate-500 hover:text-white transition block mb-4">
-                &larr; GregOrigin_Systems
-            </a>
-            
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-greg-green/10 rounded-lg flex items-center justify-center border border-greg-green/20 text-greg-green">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-white tracking-tight leading-none">IOC Manual</h1>
-                    <span class="text-[10px] uppercase tracking-widest text-greg-green font-bold">Unreal 5.7+</span>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+<aside class="w-full md:w-72 bg-cave-panel border-r border-cave-border flex-shrink-0 flex flex-col h-full z-20 overflow-hidden">
+    <div class="p-5 border-b border-cave-border relative overflow-hidden brand-block">
+        <a href="https://www.gregorigin.com" class="text-[11px] font-mono text-slate-600 hover:text-slate-300 transition block mb-3 relative">&larr; GregOrigin</a>
+        <div class="flex items-center gap-3 relative">
+            <img src="ioc-emblem.png" alt="" width="128" height="128" class="w-9 h-9 rounded-lg border border-cave-green/25 flex-shrink-0 object-cover">
+            <div>
+                <div class="text-base font-bold text-white tracking-tight leading-none">Instant Organic Caves</div>
+                <div class="text-[10px] uppercase tracking-widest text-cave-green font-bold mt-0.5">v0.4.0 &middot; UE 5.5&ndash;5.8</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto py-4 space-y-4" id="sidebar-nav">
+        <div>
+            <div class="nav-group-title">Getting Started</div>
+            <a href="tutorial.html" class="nav-link text-cave-green/90 hover:text-cave-green">Tutorial &nbsp;&rarr;</a>
+            <a href="#intro"       class="nav-link active">Introduction</a>
+            <a href="#quickstart"  class="nav-link">Quickstart &amp; Demo</a>
+            <a href="#compatibility" class="nav-link">Compatibility</a>
+        </div>
+        <div>
+            <div class="nav-group-title">Editor Tools</div>
+            <a href="#tools-menu"  class="nav-link">Tools Menu</a>
+            <a href="#setup-wizard" class="nav-link">Setup Wizard</a>
+            <a href="#showcase"    class="nav-link">Automated Showcase</a>
+        </div>
+        <div>
+            <div class="nav-group-title">Core Actor</div>
+            <a href="#procedural-actor" class="nav-link">IOCProceduralActor</a>
+            <a href="#presets"     class="nav-link sub">Cave Presets</a>
+            <a href="#shape-props" class="nav-link sub">Shape Properties</a>
+            <a href="#noise-props" class="nav-link sub">Noise &amp; Octaves</a>
+            <a href="#tunnels"     class="nav-link sub">Perlin Tunnels</a>
+            <a href="#spline"      class="nav-link sub">Spline Tunnels</a>
+            <a href="#appearance"  class="nav-link sub">Appearance</a>
+            <a href="#lod"         class="nav-link sub">LOD System</a>
+            <a href="#performance-budgets" class="nav-link sub">Production Budgets</a>
+        </div>
+        <div>
+            <div class="nav-group-title">Open-World Streaming</div>
+            <a href="#streaming"   class="nav-link">IOCStreamingManager</a>
+            <a href="#stream-params" class="nav-link sub">Stream Parameters</a>
+            <a href="#player-coupling" class="nav-link sub">Player Coupling</a>
+        </div>
+        <div>
+            <div class="nav-group-title">World Editing</div>
+            <a href="#biome-volume" class="nav-link">Biome Volumes</a>
+            <a href="#carving"     class="nav-link">Carving System</a>
+            <a href="#runtime-carving" class="nav-link sub">Runtime Carving</a>
+            <a href="#decoration"  class="nav-link">Decoration Scatter</a>
+        </div>
+        <div>
+            <div class="nav-group-title">Materials &amp; Visuals</div>
+            <a href="#materials"   class="nav-link">Material Pipeline</a>
+            <a href="#math-material" class="nav-link sub">Pure Math Material</a>
+            <a href="#pbr"         class="nav-link sub">PBR Textures</a>
+            <a href="#triplanar"   class="nav-link sub">Triplanar UVs</a>
+            <a href="#smart-colors" class="nav-link sub">Smart Vertex Colors</a>
+        </div>
+        <div>
+            <div class="nav-group-title">PCG &amp; Integration</div>
+            <a href="#pcg"         class="nav-link">PCG Node</a>
+            <a href="#nav"         class="nav-link">NavMesh Integration</a>
+            <a href="#network"     class="nav-link">Networking &amp; Replication</a>
+        </div>
+        <div>
+            <div class="nav-group-title">Production</div>
+            <a href="#async"       class="nav-link">Async Generation</a>
+            <a href="#baking"      class="nav-link">Static Mesh Baking</a>
+            <a href="#spectacular" class="nav-link">Spectacular Features</a>
+        </div>
+        <div>
+            <div class="nav-group-title">Reference</div>
+            <a href="#console"     class="nav-link">Console Commands</a>
+            <a href="#blueprint-api" class="nav-link">Blueprint API</a>
+            <a href="#trouble"     class="nav-link">Troubleshooting</a>
+            <a href="#about"       class="nav-link">Contact &amp; Support</a>
+        </div>
+    </nav>
+
+    <div class="px-4 py-3 border-t border-cave-border text-[11px] font-mono text-slate-700 text-center">
+        Instant Organic Caves v0.4.0<br>&copy; 2026 GregOrigin. All Rights Reserved.
+    </div>
+</aside>
+
+<main class="flex-1 overflow-y-auto h-full bg-cave-bg scroll-smooth" id="main-scroller">
+
+    <header class="sticky top-0 z-10 bg-cave-bg/90 backdrop-blur-md border-b border-cave-border px-8 py-3 flex items-center justify-between">
+        <div class="text-xs font-mono text-slate-600 flex items-center gap-2">
+            <span>Docs</span><span class="text-slate-700">/</span>
+            <span class="text-cave-green" id="breadcrumb-active">Introduction</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="badge-ue">UE 5.5</span>
+            <span class="badge-ue">5.6</span>
+            <span class="badge-ue">5.7</span>
+            <span class="badge-ue">5.8</span>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-8 py-10 doc">
+
+<!-- INTRO -->
+<section id="intro" class="mb-20 scroll-mt-20">
+<h1>
+    <svg class="w-6 h-6 text-cave-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+    Introduction
+</h1>
+<div class="section-hero">
+    <img src="ioc-hero.jpg" width="1400" height="732" alt="Instant Organic Caves key art: a moss-lit cavern with the arch logo mark at its centre"
+         class="block w-full h-56 sm:h-72 object-cover object-center">
+    <!-- The art carries its own wordmark, so the caption bar stays out of the way and only
+         picks up where the image fades into the page. -->
+    <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-cave-bg via-cave-bg/75 to-transparent pointer-events-none"></div>
+    <div class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 px-4 pb-2.5">
+        <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-cave-green">Math &middot; not &middot; meshes</span>
+        <span class="font-mono text-[10px] text-slate-500">v0.4.0 &mdash; GregOrigin</span>
+    </div>
+</div>
+<div class="callout-info"><strong>New here?</strong> This manual is a reference &mdash; it documents every property but does not teach the workflow. Start with the <a href="tutorial.html" class="text-cave-green underline underline-offset-2">tutorial</a>, which walks from a fresh install to your first cave in about five minutes, then come back here for detail.</div>
+<p class="text-base"><strong class="text-white">Instant Organic Caves (IOC)</strong> is a high-performance C++ plugin for Unreal Engine that replaces static cave asset packs with a fully deterministic, parametric procedural pipeline. It generates tunnels and density-field caverns asynchronously on background threads, with explicit production budgets, seam-safe open-world chunk streaming, runtime mesh carving, Biome Volume spatial overrides, Blueprint gameplay APIs, and full multiplayer replication.</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 my-6">
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><div class="text-cave-green font-bold text-sm mb-1.5">&#x26A1; Async Core</div><p class="text-xs text-slate-500 m-0 leading-5">All voxel evaluation and meshing run on background threads. Main thread only commits the final mesh.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><div class="text-cave-blue font-bold text-sm mb-1.5">&#x1F30A; Perlin Tunnels</div><p class="text-xs text-slate-500 m-0 leading-5">Distance-field plus noise radius guarantees a connected organic tube between any two 3D points, or follow a spline for art-directed paths.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><div class="text-cave-purple font-bold text-sm mb-1.5">&#x1F30D; Open World</div><p class="text-xs text-slate-500 m-0 leading-5">StreamingManager auto-loads/unloads voxel-grid-aligned chunks around players with throttled spawning and carve history persistence.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><div class="text-cave-amber font-bold text-sm mb-1.5">&#x1F3AF; Biome Volumes</div><p class="text-xs text-slate-500 m-0 leading-5">Place AIOCBiomeVolume brushes to locally override noise frequency, radius, wall thickness, or terrace steps within any sub-region.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><div class="text-cave-red font-bold text-sm mb-1.5">&#x1F4A5; Runtime Carving</div><p class="text-xs text-slate-500 m-0 leading-5">Blow holes at runtime from Blueprint. Carve history is replicated and persists across streaming chunk unload/reload.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><div class="text-white font-bold text-sm mb-1.5">&#x1F3A8; Zero-Texture Material</div><p class="text-xs text-slate-500 m-0 leading-5">Procedural math rock uses World Position noise. Zero texture bytes, no UV stretching, infinite scale.</p></div>
+</div>
+</section>
+
+<!-- QUICKSTART -->
+<section id="quickstart" class="mb-20 scroll-mt-20">
+<h1>Quickstart &amp; Demo</h1>
+<div class="bg-cave-panel border border-cave-border rounded-xl p-6 mb-5">
+    <h3 class="mt-0 mb-3 text-white text-base">&#x1F5FA;&#xFE0F; Fastest route in &mdash; the demo map</h3>
+    <ol>
+        <li><strong>Tools &rarr; Instant Organic Caves &rarr; Open Demo Map</strong></li>
+        <li>Press <strong>Play</strong>.</li>
+    </ol>
+    <p class="mt-3">The guided eight-section showcase starts on its own and builds every cave
+    live &mdash; nothing is pre-baked. Nothing needs setting up first.</p>
+    <div class="mt-4 p-3 bg-cave-green/5 border border-cave-green/20 rounded-lg text-sm text-slate-300">
+    The map lives at <code>/InstantOrganicCaves/Maps/IOC_DemoMap</code>. The Content Browser
+    hides plugin content unless <strong>Settings &rarr; Show Plugin Content</strong> is ticked,
+    which is why the menu entry is the reliable way to reach it.</div>
+</div>
+<div class="bg-cave-panel border border-cave-border rounded-xl p-6 mb-5">
+    <h3 class="mt-0 mb-3 text-white text-base">&#x1F680; Instant Demo &mdash; one command</h3>
+    <ol>
+        <li>Open the console (<code>~</code>) or Output Log.</li>
+        <li>Type: <code class="text-white bg-slate-800 px-3 py-1 select-all">IOC.SpawnTunnelDemo</code></li>
+        <li>Press Enter. Walk around immediately.</li>
+    </ol>
+    <div class="mt-4 p-3 bg-cave-green/5 border border-cave-green/20 rounded-lg text-sm text-slate-300">Creates a Perlin Tunnel from (0,0,0) to (3000,1500,800), a full lighting rig (Directional, SkyLight, ExponentialFog, PostProcess), and a 3rd-Person Character with an attached flashlight SpotLight you immediately possess.</div>
+</div>
+<div class="bg-cave-panel border border-cave-border rounded-xl p-6 mb-5">
+    <h3 class="mt-0 mb-3 text-white text-base">&#x1F30C; Spectacular Demo</h3>
+    <p>Run <code>IOC.SpawnSpectacular</code> to generate an <strong>Alien Hive</strong> preset cave with Domain Warping and Terracing at VoxelSize=50 for maximum geometric detail.</p>
+</div>
+<div class="bg-cave-panel border border-cave-border rounded-xl p-6 mb-5">
+    <h3 class="mt-0 mb-3 text-white text-base">&#x1F3AC; Showcase Flythrough &mdash; the full tour</h3>
+    <p>Run <code>IOC.SpawnShowcase</code> for an automated, captioned flythrough of eight sections:
+    Drop-In Cave Actor, Path-Driven Tunnel, Alien Hive, Canyon Strata, Scatter Props, Directed
+    Carving, Streaming Manager, and Performance &amp; Bake. It builds eight caves, a camera rig
+    and its own lighting, and is safe to re-run &mdash; a second call reuses what is already there
+    rather than duplicating it.</p>
+    <p class="mt-3">Prefer menus? Everything here is also under
+    <strong>Tools &rarr; Instant Organic Caves</strong>, and the guided wizard is at
+    <strong>Window &rarr; IOC Setup Wizard&hellip;</strong></p>
+</div>
+<div class="bg-cave-panel border border-cave-border rounded-xl p-6 mb-5">
+    <h3 class="mt-0 mb-3 text-white text-base">&#x1F9F9; Cleaning up</h3>
+    <p>The demos spawn actors into whatever level is open, so there are two ways to remove them:</p>
+    <ul class="text-sm space-y-1">
+        <li><code>IOC.ClearShowcase</code> &mdash; removes the showcase flythrough and restores the
+        camera. Leaves the tunnel and spectacular demos alone.</li>
+        <li><code>IOC.ClearAllDemos</code> &mdash; removes <em>everything</em> the demo commands
+        created, including the tunnel demo, the spectacular demo and the demo character. Use this
+        one to put your level back as you found it.</li>
+    </ul>
+    <div class="callout-warn mt-3"><strong class="text-cave-amber">Tip:</strong>
+    <code>IOC.ValidateInstallation</code> writes a diagnostic report to the Output Log if anything
+    looks wrong with the install.</div>
+</div>
+<div class="bg-cave-panel border border-cave-border rounded-xl p-6 mb-5">
+    <h3 class="mt-0 mb-3 text-white text-base">&#x1F4D0; Manual Placement</h3>
+    <ol>
+        <li>Place Actors panel &rarr; search <code>IOC</code> &rarr; drag <code>AIOCProceduralActor</code> into the level.</li>
+        <li>Choose a <strong>CavePreset</strong> from the dropdown, click <strong>Apply Preset</strong>.</li>
+        <li>Click <strong>Generate Cave</strong> and wait for async generation to complete.</li>
+    </ol>
+    <div class="callout-warn mt-3"><strong class="text-cave-amber">Dev-only:</strong> <code>IOC.SpawnTunnelDemo</code> and <code>IOC.SpawnSpectacular</code> use <code>ECVF_Cheat</code> and are excluded from Shipping builds.</div>
+</div>
+</section>
+
+<!-- COMPATIBILITY -->
+<section id="compatibility" class="mb-20 scroll-mt-20">
+<h1>Compatibility</h1>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Item</th><th class="py-2">Details</th></tr></thead>
+    <tbody>
+        <tr><td>Engine Versions</td><td>Unreal Engine <strong>5.5, 5.6, 5.7</strong> (source-included Fab package)</td></tr>
+        <tr><td>Platforms</td><td>Win64, Mac, Linux, Android, iOS</td></tr>
+        <tr><td>Module Type</td><td>Runtime &mdash; works in packaged Shipping builds</td></tr>
+        <tr><td>Required Plugins</td><td>PCG, GeometryScripting, EnhancedInput (bundled with UE)</td></tr>
+        <tr><td>Network</td><td>Full actor replication (server-authority generation, client receive via OnRep)</td></tr>
+        <tr><td>Nanite</td><td>Optional on baked Static Mesh. API guarded for 5.5/5.6 compatibility.</td></tr>
+        <tr><td>NavMesh</td><td>Optional auto-rebuild per actor or per streaming chunk.</td></tr>
+    </tbody>
+</table>
+</section>
+
+<!-- TOOLS MENU -->
+<section id="tools-menu" class="mb-20 scroll-mt-20">
+<h1>Dedicated Tools Menu</h1>
+<p>Everything lives under <strong>Tools &gt; Instant Organic Caves</strong>. The wizard also has a shortcut on <strong>Window &gt; IOC Setup Wizard&hellip;</strong>, for parity with the other editor tools that open a window.</p>
+<h3>Quick start</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Open Setup Wizard</strong><p class="text-xs m-0 text-slate-500">The guided five-step pass: preset, environment, readiness checks, generate.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Validate Installation</strong><p class="text-xs m-0 text-slate-500">Health check for PCG, GeometryScripting and shipped content. Writes detail to the Output Log.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Open Documentation</strong><p class="text-xs m-0 text-slate-500">Opens this manual in your default browser.</p></div>
+</div>
+<h3>Demos</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Open Demo Map</strong><p class="text-xs m-0 text-slate-500">Opens the shipped <code>IOC_DemoMap</code>. Press Play and the flythrough runs itself &mdash; nothing to set up.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Spawn Tunnel Demo</strong><p class="text-xs m-0 text-slate-500">A playable tunnel with lighting and a character, in the level you already have open.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Spawn Spectacular Demo</strong><p class="text-xs m-0 text-slate-500">The crystal cave, with mood lighting and scatter layers.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Spawn Showcase Flythrough</strong><p class="text-xs m-0 text-slate-500">Eight captioned sections with the diagnostic HUD and generation metrics.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Spawn Capture Showcase</strong><p class="text-xs m-0 text-slate-500">The same flythrough, captions only and no debug text. Record from this one.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Clear Showcase</strong><p class="text-xs m-0 text-slate-500">Removes the flythrough and restores the camera. Leaves the tunnel and spectacular demos in place.</p></div>
+    <div class="bg-cave-panel border border-cave-border p-4 rounded-lg"><strong class="text-white block mb-1 text-sm">Clear All Demos</strong><p class="text-xs m-0 text-slate-500">Removes everything <em>any</em> demo added, including the playtest character. Use this before saving a level you care about.</p></div>
+</div>
+</section>
+
+<!-- SETUP WIZARD -->
+<section id="setup-wizard" class="mb-20 scroll-mt-20">
+<h1>The Setup Wizard</h1>
+<p>Open it from <strong>Tools &gt; Instant Organic Caves</strong>, from <strong>Window</strong>, or with <code>IOC.OpenSetupWizard</code>. It is native C++ Slate and depends on no Python, Blueprint, or Editor Utility Widget.</p>
+<p>The wizard is a five-step pass. Each step both configures the cave and checks the project can actually build it:</p>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Step</th><th class="py-2">What it does</th></tr></thead>
+    <tbody>
+        <tr><td><code>1 &middot; Welcome</code></td><td>Project snapshot &mdash; validation state, cave actors already in the level, estimated voxel workload, and whether you are spawning a new actor or reconfiguring an existing one. <strong class="text-white">Validate Now</strong> and <strong class="text-white">Prepare Starter Assets</strong> live here.</td></tr>
+        <tr><td><code>2 &middot; Choose Cave</code></td><td>Preset or Custom, with a live preview. <strong class="text-white">Convert Preset to Custom</strong> copies the current preset's values in as a starting point rather than dropping you on defaults.</td></tr>
+        <tr><td><code>3 &middot; Environment</code></td><td>Lighting, fog and an optional playtest character, so the cave is walkable the moment it finishes.</td></tr>
+        <tr><td><code>4 &middot; Review</code></td><td>Readiness checks and the voxel budget with a risk band. Generation is blocked while a check is failing &mdash; each one exists because it produces a cave that looks broken rather than an error you could diagnose.</td></tr>
+        <tr><td><code>5 &middot; Finish</code></td><td>Generate, then post-generation actions: open the demo map, create a starter level, add a carving volume or streaming manager.</td></tr>
+    </tbody>
+</table>
+<p><strong class="text-white">Undo Added Actors</strong> in the footer removes everything the run placed, in one click, so the wizard is safe to experiment with. Settings persist between sessions, and <strong class="text-white">Save / Load Profile</strong> carries a configuration between projects.</p>
+</section>
+
+<!-- SHOWCASE -->
+<section id="showcase" class="mb-20 scroll-mt-20">
+<h1>Automated Showcase &amp; Flythrough</h1>
+<p>The Cinematic Showcase is controlled by the <code>AIOCShowcaseLauncher</code> actor. It handles async readiness guards, streaming, PCG scattering, and baked mesh transitions automatically.</p>
+<h3>ShowcaseLauncher CallInEditor Buttons</h3>
+<ul>
+    <li><strong class="text-cave-blue">Start Showcase</strong> &mdash; run with diagnostic HUD and generation metrics.</li>
+    <li><strong class="text-cave-green">Start Capture Showcase</strong> &mdash; immersive captions only, no debug text (ideal for video).</li>
+    <li><strong class="text-cave-red">Clear Showcase</strong> &mdash; destroys all generated actors, restores viewport camera.</li>
+</ul>
+<div class="callout-info"><strong class="text-cave-blue">Continuous looping:</strong> Enable <code>bLoopShowcase</code> on the Launcher Actor for trade show kiosks. The showcase waits on an async Readiness Guard before the camera moves.</div>
+</section>
+
+<!-- PROCEDURAL ACTOR -->
+<section id="procedural-actor" class="mb-20 scroll-mt-20">
+<h1>
+    <svg class="w-6 h-6 text-cave-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/></svg>
+    AIOCProceduralActor
+</h1>
+<p>The core placement unit. Drop one into a level, configure its categories in the Details panel, and click <strong>Generate Cave</strong>. Every property tagged <code>ReplicatedUsing=OnRep_GenerationSettings</code> synchronises across network sessions.</p>
+
+<h2 id="presets">Cave Presets &mdash; <code>IOC</code> category</h2>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Preset</th><th class="py-2">Key Parameters &amp; Use</th></tr></thead>
+    <tbody>
+        <tr><td>Custom</td><td>All parameters controlled manually.</td></tr>
+        <tr><td>Large Tunnel</td><td>Wide majestic passages. TunnelRadius ~450, SmoothIterations=3.</td></tr>
+        <tr><td>Tight Crawlspace</td><td>Claustrophobic crawl. TunnelRadius ~150, higher NoiseFrequency.</td></tr>
+        <tr><td>Open Cavern</td><td>Massive halls. TunnelRadius ~1200, blob mode, large bounds.</td></tr>
+        <tr><td>Alien Hive (Warped)</td><td>Domain Warping enabled, high DomainWarpIntensity, biomorphic silhouette.</td></tr>
+        <tr><td>Canyon Strata (Terraced)</td><td>TerraceSteps active, layered horizontal ledges, geological look.</td></tr>
+    </tbody>
+</table>
+<div class="callout-tip">Enable <code>bForcePreset</code> (IOC|Advanced) to automatically re-apply the preset every BeginPlay, overriding any in-editor manual customisations.</div>
+
+<h2 id="shape-props">Shape Properties &mdash; <code>IOC|Shape</code></h2>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description &amp; Notes</th></tr></thead>
+    <tbody>
+        <tr><td>GenerationBounds</td><td>FVector size (X,Y,Z) in centimetres. Non-cubic volumes allow flat tunnels or tall shafts.</td></tr>
+        <tr><td>VoxelSize</td><td>Edge length of each voxel cube. Default <code>50.0</code> cm. Halving octuples voxel count.</td></tr>
+        <tr><td>CaveSeed</td><td>Integer seed for deterministic noise. Same seed + same params = identical mesh. Default <code>1337</code>.</td></tr>
+        <tr><td>NoiseThreshold</td><td>Density iso-surface. Voxels below this value are carved. Default <code>0.5</code>.</td></tr>
+        <tr><td>SmoothIterations</td><td>Laplacian smoothing passes. 0 = voxel look, 3 = organic, 5+ = rounded. Default <code>3</code>.</td></tr>
+        <tr><td>MacroChamberWeight</td><td>Blends low-frequency macro noise to create large open chambers. Range 0&ndash;1.</td></tr>
+        <tr><td>RidgedDetailWeight</td><td>Adds high-frequency ridged noise for sharp rock detail. Range 0&ndash;1.</td></tr>
+        <tr><td>InteriorDensityBias</td><td>Shifts interior density. Positive opens the cave; negative closes it. Range &minus;1 to 1.</td></tr>
+    </tbody>
+</table>
+
+<h2 id="noise-props">Noise &amp; Octave Controls &mdash; <code>IOC|Shape</code></h2>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>NoiseFrequency</td><td>Base scale of the noise field. Lower &rarr; bigger features. Typical range 0.001&ndash;0.05. Default <code>0.005</code>.</td></tr>
+        <tr><td>NoiseOctaves</td><td>Fractal noise layers summed. Higher = more surface detail. Range 1&ndash;8. Default <code>4</code>.</td></tr>
+        <tr><td>NoiseLacunarity</td><td>Frequency multiplier between octaves. Default <code>2.0</code>.</td></tr>
+        <tr><td>NoisePersistence</td><td>Amplitude scale-down per octave. Default <code>0.5</code>.</td></tr>
+        <tr><td>DomainWarpIntensity</td><td>Warps the sampling position before noise evaluation. Creates folded, twisted shapes. 0 = disabled.</td></tr>
+        <tr><td>TerraceSteps</td><td>Quantises density into discrete bands. 0 = disabled. Creates horizontal ledges.</td></tr>
+        <tr><td>bUseWorldSpaceNoise</td><td>Samples noise in world space. Required for seamless chunk boundaries in streaming.</td></tr>
+    </tbody>
+</table>
+
+<h2 id="tunnels">Perlin Tunnels &mdash; <code>IOC|Tunnel</code></h2>
+<p>Enable <code>bGenerateTunnel</code> to switch from blob/cavern mode to tunnel mode. The algorithm computes the distance field to a line segment between two points, then adds 3D Perlin Noise to the radius, producing a guaranteed connected organic tube.</p>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>bGenerateTunnel</td><td>Master toggle for tunnel mode.</td></tr>
+        <tr><td>TunnelStart</td><td>Start point in actor-local space. Viewport widget editable. Disabled when bUseSpline is on.</td></tr>
+        <tr><td>TunnelEnd</td><td>End point in actor-local space. Viewport widget editable.</td></tr>
+        <tr><td>TunnelRadius</td><td>Base radius of the carved tube in centimetres. Noise adds organic variation.</td></tr>
+        <tr><td>WallThickness</td><td>Shell thickness around the hollow tube.</td></tr>
+        <tr><td>bUseFixedBoundsForTunnel</td><td>Uses GenerationBounds exactly rather than auto-expanding to fit TunnelEnd.</td></tr>
+    </tbody>
+</table>
+
+<h2 id="spline">Spline-Driven Tunnels &mdash; <code>IOC|Tunnel</code></h2>
+<p>Enable <code>bUseSpline</code> (requires <code>bGenerateTunnel</code>) to drive the tunnel axis using the built-in <code>USplineComponent</code> (<code>CaveSpline</code>). Edit spline points directly in the viewport for full art-direction.</p>
+<div class="callout-info">The <code>CaveSpline</code> component is auto-created by the actor and is visible in the Components panel. Noise radius still applies to each spline tangent position.</div>
+
+<h2 id="appearance">Appearance &mdash; <code>IOC|Appearance</code></h2>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>CaveMaterial</td><td>Material for the primary mesh. Defaults to <code>MI_IOC_CaveWalls</code>. Accepts any UMaterialInterface.</td></tr>
+        <tr><td>TextureTiling</td><td>UV tiling multiplier passed to the material. Default <code>0.01</code>.</td></tr>
+        <tr><td>bGenerateSmartColors</td><td>Paints vertex colors based on surface orientation (floor/wall/ceiling). Used by the Smart Cave material.</td></tr>
+    </tbody>
+</table>
+
+<h2 id="lod">LOD System &mdash; <code>IOC|Advanced</code></h2>
+<p>A dedicated second <code>UDynamicMeshComponent</code> (<code>LODMeshComponent</code>) is generated at a coarser voxel resolution. The system switches to this mesh when the camera exceeds <code>LODDistance</code>.</p>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>bEnableLOD</td><td>Master toggle. Default <code>true</code>.</td></tr>
+        <tr><td>LODDistance</td><td>Switch distance in centimetres. Default <code>5000</code>.</td></tr>
+        <tr><td>LODVoxelSizeMultiplier</td><td>LOD mesh uses VoxelSize &times; this. Default <code>3.0</code> (1/27th the voxel count). Range 1&ndash;16.</td></tr>
+    </tbody>
+</table>
+
+<h2 id="performance-budgets">Production Budgets &mdash; <code>IOC|Production</code></h2>
+<p>These caps protect runtime memory and frame time. Generation is aborted and an error logged if any limit is exceeded.</p>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Default</th><th class="py-2">Notes</th></tr></thead>
+    <tbody>
+        <tr><td>MaxVoxelCount</td><td>15,000,000</td><td>Exceeding this aborts generation immediately.</td></tr>
+        <tr><td>MaxGeneratedTriangles</td><td>2,000,000</td><td>Primary mesh triangle cap.</td></tr>
+        <tr><td>MaxScatterInstances</td><td>100,000</td><td>Total HISM instances across all decoration layers.</td></tr>
+    </tbody>
+</table>
+<div class="callout-warn"><strong>Tip:</strong> A 5000x5000x2000 volume at VoxelSize=50 evaluates ~8 M voxels. Profile on target hardware before exceeding defaults.</div>
+
+<h2>Advanced Options &mdash; <code>IOC|Advanced</code></h2>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>bAutoRebuildNavMesh</td><td>Triggers a NavMesh rebuild after mesh commit.</td></tr>
+        <tr><td>bForcePreset</td><td>Applies selected preset on BeginPlay, overriding in-editor values.</td></tr>
+        <tr><td>bShowDebugViz</td><td>Draws cyan bounds box and green tunnel line in editor. Default <code>true</code>.</td></tr>
+        <tr><td>bLogPresetDebug</td><td>Prints preset parameter values to Output Log on ApplyPreset.</td></tr>
+        <tr><td>bUseWorldSpaceNoise</td><td>World-space noise sampling for seam-free streaming.</td></tr>
+    </tbody>
+</table>
+
+<h2>Real-Time Performance Stats &mdash; <code>IOC|Performance</code></h2>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>LastGenerationTimeSeconds</td><td>Wall-clock seconds the async task took.</td></tr>
+        <tr><td>LastEstimatedVoxelCount</td><td>Total voxels evaluated.</td></tr>
+        <tr><td>LastPrimaryTriangleCount</td><td>Triangles in the full-detail primary mesh.</td></tr>
+        <tr><td>LastLODTriangleCount</td><td>Triangles in the LOD mesh.</td></tr>
+        <tr><td>LastScatterInstanceCount</td><td>HISM instances placed across all decoration layers.</td></tr>
+        <tr><td>bLastGenerationSucceeded</td><td>False if any budget was exceeded or an error occurred.</td></tr>
+        <tr><td>LastGenerationError</td><td>Human-readable error string if generation failed.</td></tr>
+    </tbody>
+</table>
+</section>
+
+<!-- STREAMING -->
+<section id="streaming" class="mb-20 scroll-mt-20">
+<h1>
+    <span class="badge-new mr-2">Open World</span>
+    AIOCStreamingManager
+</h1>
+<p>Place one <code>AIOCStreamingManager</code> in your level. The server-authority tracks all player pawns, spawns replicated <code>AIOCProceduralActor</code> chunks within <code>StreamRadius</code>, and destroys chunks beyond the unload radius. Chunk creation is throttled per update tick.</p>
+<div class="callout-net"><strong class="text-cave-purple">Network:</strong> The StreamingManager runs on the authority. Spawned chunks are replicated actors &mdash; clients receive geometry through actor replication after the server commits the mesh.</div>
+<p>All spawned chunks use <strong>world-space noise</strong> (forced) and are positioned on a voxel-aligned integer grid so neighboring chunks share identical density samples at their boundaries &mdash; eliminating seams.</p>
+
+<h2 id="stream-params">Streaming Parameters</h2>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Category</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>ChunkSize</td><td>IOC Streaming</td><td>World-space size of each chunk. Rounded to whole voxels. Default 2000x2000x1500 cm.</td></tr>
+        <tr><td>StreamRadius</td><td>IOC Streaming</td><td>Manhattan radius of loaded chunks around the player chunk. Range 1&ndash;8. Default <code>2</code>.</td></tr>
+        <tr><td>UnloadDistanceBias</td><td>IOC Streaming</td><td>Chunks beyond StreamRadius &times; this are destroyed. Default <code>1.2</code>.</td></tr>
+        <tr><td>MaxLoadedChunks</td><td>IOC Streaming|Production</td><td>Hard cap across all tracked players. Default <code>64</code>.</td></tr>
+        <tr><td>MaxChunkLoadsPerUpdate</td><td>IOC Streaming|Production</td><td>Max new actors spawned per update tick. Default <code>2</code>.</td></tr>
+        <tr><td>StreamingUpdateInterval</td><td>IOC Streaming|Production</td><td>Update cadence in seconds. Default <code>0.25</code>.</td></tr>
+        <tr><td>NoPlayerUnloadDelay</td><td>IOC Streaming|Production</td><td>Seconds without a pawn before chunks release. Default <code>10</code>.</td></tr>
+        <tr><td>BaseSeed</td><td>IOC Generation</td><td>Seed offset. Each chunk seed = BaseSeed + hash(chunk coord).</td></tr>
+        <tr><td>VoxelSize</td><td>IOC Generation</td><td>Voxel resolution for every chunk. Default <code>80.0</code> cm.</td></tr>
+        <tr><td>CavePreset</td><td>IOC Generation</td><td>Applied uniformly to every spawned chunk.</td></tr>
+        <tr><td>SharedMaterial</td><td>IOC Appearance</td><td>Material for every chunk. Null uses the default plugin material.</td></tr>
+        <tr><td>SharedDecorationLayers</td><td>IOC Decoration</td><td>Scatter layers shared by every spawned chunk.</td></tr>
+        <tr><td>DomainWarpIntensity</td><td>IOC Spectacular</td><td>Domain warp applied to every chunk.</td></tr>
+        <tr><td>TerraceSteps</td><td>IOC Spectacular</td><td>Terrace stepping applied to every chunk.</td></tr>
+    </tbody>
+</table>
+
+<h2 id="player-coupling">Player Coupling &mdash; <code>IOC Streaming|Coupling</code></h2>
+<p>When <code>bAutoCouplePlayerAtStart</code> is enabled, the manager teleports the first possessed pawn to its world position + <code>CaveStartOffset</code>, holds it at <code>PlayerStartHoldHeight</code> until the initial chunk finishes generating, then uses a downward trace of <code>GroundProbeDistance</code> to land the player on the first solid surface.</p>
+<div class="callout-warn">Disabled in network games unless <code>bAllowCouplingInNetworkGames</code> is explicitly true.</div>
+
+<h2>Blueprint API &mdash; Streaming Manager</h2>
+<pre><code class="language-cpp">void  RebuildAroundLocation(FVector WorldLocation);  // Force-recentre chunk grid
+FVector GetEffectiveChunkSize() const;               // Voxel-aligned actual chunk size
+int32 GetLoadedChunkCount()  const;
+int32 GetPendingChunkCount() const;
+// Runtime carving (authority only)
+void CarveStreamedCavesAtLocation(FVector WorldLocation, float Radius);
+void ClearStreamedRuntimeCarves();</code></pre>
+</section>
+
+<!-- BIOME VOLUMES -->
+<section id="biome-volume" class="mb-20 scroll-mt-20">
+<h1>
+    <span class="badge-new mr-2">Spatial Override</span>
+    AIOCBiomeVolume
+</h1>
+<p>Place <code>AIOCBiomeVolume</code> brush actors overlapping your generation bounds. When the actor runs generation, each voxel position is tested against all Biome Volumes and the highest-<code>Priority</code> override is applied, allowing local characteristic changes without separate actors.</p>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>Priority</td><td>When volumes overlap, highest Priority wins. Default <code>0</code>.</td></tr>
+        <tr><td>bOverride_NoiseFrequency</td><td>Toggle + value to locally change cave detail density.</td></tr>
+        <tr><td>bOverride_TunnelRadius</td><td>Widen or narrow the tunnel radius inside this volume.</td></tr>
+        <tr><td>bOverride_WallThickness</td><td>Change wall thickness for this region.</td></tr>
+        <tr><td>bOverride_TerraceSteps</td><td>Enable or change terrace step height locally.</td></tr>
+    </tbody>
+</table>
+<div class="callout-tip">Biome Volumes are sampled in actor-local space. Scale and rotate the brush freely &mdash; Box, Sphere, and Cylinder brush shapes all work.</div>
+</section>
+
+<!-- CARVING -->
+<section id="carving" class="mb-20 scroll-mt-20">
+<h1>Carving System</h1>
+<p>IOC provides two carving mechanisms: <strong>static editor-time carving</strong> via component, and <strong>dynamic runtime carving</strong> via Blueprint.</p>
+
+<h2>Static Editor Carving &mdash; <code>UIOCCarvingComponent</code></h2>
+<p>Add a <code>UIOCCarvingComponent</code> as a child of any <code>AIOCProceduralActor</code>. The actor automatically discovers all attached carving components at generation time and guarantees the carved volume is hollow regardless of the noise field. Use for guaranteed doors, corridors, or entry points.</p>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>ShapeType</td><td>Sphere, Box, or Capsule.</td></tr>
+        <tr><td>SphereRadius</td><td>Radius in cm when ShapeType = Sphere.</td></tr>
+        <tr><td>BoxExtent</td><td>Half-extents (X,Y,Z) in cm when ShapeType = Box.</td></tr>
+        <tr><td>CapsuleRadius / CapsuleHalfHeight</td><td>Capsule dimensions when ShapeType = Capsule.</td></tr>
+        <tr><td>FalloffRadius</td><td>Soft-blend distance in cm at the edge of the carved shape. Prevents hard seams.</td></tr>
+    </tbody>
+</table>
+
+<h2 id="runtime-carving">Runtime Carving &mdash; <code>IOC Gameplay</code></h2>
+<p>Blow holes at runtime from Blueprint or C++ (server-authority only). Carve operations are stored in <code>RuntimeCarves</code> (a <code>SaveGame</code> TArray), replicated via <code>OnRep_RuntimeCarves</code>, and re-applied when the mesh regenerates.</p>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property / Function</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>MaxRuntimeCarves</td><td>Maximum carve history entries per actor. Default <code>256</code>.</td></tr>
+        <tr><td>MinRuntimeCarveRadius</td><td>Minimum carve radius in cm. Default <code>25.0</code>.</td></tr>
+        <tr><td>MaxRuntimeCarveRadius</td><td>Maximum carve radius in cm. Default <code>5000.0</code>.</td></tr>
+        <tr><td>CarveAtLocation()</td><td>BlueprintCallable, BlueprintAuthorityOnly. Sphere carve at world location + regeneration.</td></tr>
+        <tr><td>ClearRuntimeCarves()</td><td>Removes all carve history and regenerates. Authority only.</td></tr>
+    </tbody>
+</table>
+<pre><code class="language-cpp">// Server-side carving example
+void AMyGameMode::OnExplosion(FVector WorldPos, float Radius)
+{
+    if (AIOCProceduralActor* Cave = FindNearestCave(WorldPos))
+        Cave->CarveAtLocation(WorldPos, Radius);
+}</code></pre>
+<div class="callout-net"><strong class="text-cave-purple">Late join:</strong> New clients receive the full <code>RuntimeCarves</code> array through initial replication, triggering a local <code>OnRep_RuntimeCarves</code> to regenerate and match the server state.</div>
+</section>
+
+<!-- DECORATION -->
+<section id="decoration" class="mb-20 scroll-mt-20">
+<h1>Decoration Scatter System</h1>
+<p>Add <code>FIOCScatterLayer</code> entries to <code>DecorationLayers</code> on the actor (or <code>SharedDecorationLayers</code> on the StreamingManager). After meshing, IOC scatters HISM instances on matching faces.</p>
+<p>Eight props ship with the plugin in <code>/InstantOrganicCaves/InstantOrganicCaves/Geometry/</code> &mdash; the segment repeats because the plugin mounts its <code>Content</code> folder as <code>/InstantOrganicCaves</code> and keeps the meshes in a folder of the same name inside it &mdash; so a furnished cave needs no sourced art: <code>SM_IOC_Rock_A</code>, <code>_B</code> and <code>_C</code> (boulder down to gravel), <code>SM_IOC_Crystal_A</code> and <code>_B</code>, <code>SM_IOC_Geode</code>, <code>SM_IOC_Stalactite</code> and <code>SM_IOC_Stalagmite</code>. Each has two LODs, simple collision, and a pivot placed for how it is used &mdash; stalactites hang from their top, everything else sits on its base &mdash; so instances neither float nor sink when aligned to a surface.</p>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>Mesh</td><td>Static Mesh asset to scatter (stalactites, crystals, debris).</td></tr>
+        <tr><td>Density</td><td>Instances per square metre of matching surface.</td></tr>
+        <tr><td>ScaleRange</td><td>Min/Max random uniform scale. Default 0.8&ndash;1.2.</td></tr>
+        <tr><td>bAlignToNormal</td><td>Rotates each instance to align with the surface normal.</td></tr>
+        <tr><td>MinSlopeZ / MaxSlopeZ</td><td>Filter by surface Z-normal. 1.0=floor, 0.0=wall, &minus;1.0=ceiling. Use &minus;1.0/&minus;0.5 for ceiling stalactites.</td></tr>
+        <tr><td>RandomPitch</td><td>Random pitch jitter in degrees for organic variation.</td></tr>
+        <tr><td>PoissonMinSeparation</td><td>When &gt; 0, uses Poisson disk sampling with this minimum distance (cm). Prevents instance overlap.</td></tr>
+    </tbody>
+</table>
+<div class="callout-tip"><strong>Ceiling stalactites:</strong> Set MinSlopeZ=&minus;1.0, MaxSlopeZ=&minus;0.5, bAlignToNormal=true. This selects only ceiling faces and points meshes downward.</div>
+</section>
+
+<!-- MATERIALS -->
+<section id="materials" class="mb-20 scroll-mt-20">
+<h1>Material Pipeline</h1>
+<p>IOC ships a hybrid pipeline. The default <code>MI_IOC_CaveWalls</code> lets you toggle between a zero-texture procedural rock and high-fidelity PBR textures.</p>
+<div class="callout-warn"><strong>Using your own material? Two flags on the base material are not optional.</strong>
+<br><br>
+<strong>Two Sided</strong> must be on. A cave is a shell &mdash; <code>TunnelRadius</code> of air inside <code>WallThickness</code> of rock &mdash; and the player stands <em>inside</em> it, so the tunnel bore's surfaces face away from the camera. A one-sided material culls them and the wall renders transparent: you see through it, through the outer shell behind it, and out of the level. Unreal flips the vertex normal on backfaces for two-sided materials, so shading stays correct.
+<br><br>
+<strong>Used with Instanced Static Meshes</strong> must be on for anything used by a scatter layer. Props are placed on HISM components, and a material without that usage flag cannot be applied to one &mdash; the engine silently substitutes <code>WorldGridMaterial</code> and every instance renders untextured grey. This one only shows up in a packaged or <code>-game</code> build: in the editor the flag is set on the fly and thrown away again each session, so the editor looks correct while the shipped product does not.
+<br><br>
+Both flags live on the base <code>UMaterial</code>, never on a Material Instance. If Unreal warns you about an <em>instance</em>, the flag it wants is on that instance's parent.</div>
+
+<h2 id="math-material">Pure Math Material &mdash; <code>M_IOC_MathRock</code></h2>
+<p>Uses <strong>Absolute World Position</strong> fed into multi-octave Simplex Noise to generate base color, moss patches, roughness variation, and subtle normal perturbation &mdash; algorithmically, with zero texture bytes.</p>
+<ul>
+    <li><strong>Zero memory footprint</strong> &mdash; 0 bytes of texture data.</li>
+    <li><strong>Infinite scale</strong> &mdash; identical on a 1 m crawlspace or a 500 m cavern.</li>
+    <li><strong>Seam-free</strong> &mdash; world-space sampling makes chunks tile seamlessly.</li>
+    <li><strong>Smart Vertex Color support</strong> &mdash; blends color tones automatically per surface zone.</li>
+</ul>
+
+<h2 id="pbr">PBR Texture Mode</h2>
+<p>Set <strong>UsePBRTexture = true</strong> on <code>MI_IOC_CaveWalls</code> and select a <strong>CaveStyleTexture</strong>:</p>
+<ul>
+    <li><strong>T_RockObsidian</strong> &mdash; Glossy volcanic glass with organic ridges.</li>
+    <li><strong>T_RockLimestone</strong> &mdash; Porous light-grey stalactite surface.</li>
+    <li><strong>T_RockAlien</strong> &mdash; Dark bioporous stone with bioluminescent green veins.</li>
+</ul>
+<p>Also included: <code>M_IOC_SmartCave</code> and <code>MI_IOC_SmartCave_Inst</code> &mdash; add slope-based height blending for additional biome variation.</p>
+
+<h2 id="triplanar">Triplanar UV Generation</h2>
+<p>IOC generates UVs using <strong>Box Mapping (Triplanar) projection</strong>. Each face's dominant world normal (X, Y, or Z) selects the projection axis, eliminating stretching on steep walls and overhanging ceilings. The <code>TextureTiling</code> property scales UV frequency globally.</p>
+
+<h2 id="smart-colors">Smart Vertex Colors</h2>
+<p>When <code>bGenerateSmartColors</code> is enabled, the generation pass writes vertex colors based on each vertex's world-space Z normal:</p>
+<ul>
+    <li><strong>Red</strong> &mdash; floor intensity (normal.Z &gt; 0.7)</li>
+    <li><strong>Green</strong> &mdash; ceiling intensity (normal.Z &lt; &minus;0.5)</li>
+    <li><strong>Blue</strong> &mdash; wall intensity (intermediate normals)</li>
+</ul>
+</section>
+
+<!-- PCG -->
+<section id="pcg" class="mb-20 scroll-mt-20">
+<h1>PCG Integration</h1>
+<p>The <code>IOCVoxelCore</code> PCG node exposes the same density field as the Actor to the Procedural Content Generation graph. Use it to scatter PCG points on the generated surface for foliage, crystals, lighting, or AI spawn points.</p>
+<h3>Included PCG Content</h3>
+<ul>
+    <li><code>IOC_Graph_Master</code> &mdash; Master PCG graph with IOCVoxelCore pre-wired.</li>
+    <li><code>IOC_Fn_OrganicNoise</code> &mdash; Noise-based density filtering sub-graph.</li>
+    <li><code>IOC_Fn_ScatterCrystals</code> &mdash; Crystal decoration scatter layer preset.</li>
+    <li><code>NewPCGGraphInstance</code> &mdash; Ready-to-use PCG Graph Instance.</li>
+</ul>
+<div class="callout-tip">The IOCVoxelCore PCG node (v1.1+) includes the same Perlin Tunnel support as the Actor, so tunnel paths can drive PCG scatter as well as mesh generation.</div>
+</section>
+
+<!-- NAV -->
+<section id="nav" class="mb-20 scroll-mt-20">
+<h1>NavMesh Integration</h1>
+<p>Set <code>bAutoRebuildNavMesh = true</code> on the actor or the StreamingManager. After each mesh commit IOC requests a NavMesh rebuild scoped to the actor's bounds, enabling AI navigation in freshly generated geometry.</p>
+<div class="callout-warn">NavMesh rebuilds are editor-thread operations. In open-world setups with frequent streaming, keep this off and bind to the <code>OnGenerationFinished</code> delegate to trigger a single build after all chunks complete.</div>
+</section>
+
+<!-- NETWORKING -->
+<section id="network" class="mb-20 scroll-mt-20">
+<h1>
+    <span class="badge-net mr-2">Multiplayer</span>
+    Networking &amp; Replication
+</h1>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property / Group</th><th class="py-2">Rep Condition</th><th class="py-2">Notes</th></tr></thead>
+    <tbody>
+        <tr><td>All Shape/Tunnel/Appearance params</td><td>COND_None</td><td>OnRep_GenerationSettings triggers full async regeneration on clients.</td></tr>
+        <tr><td>RuntimeCarves</td><td>COND_None (SaveGame)</td><td>OnRep_RuntimeCarves re-applies carve history and regenerates clients.</td></tr>
+    </tbody>
+</table>
+<h3>Authority-only functions</h3>
+<p>All mutation functions are <code>BlueprintAuthorityOnly</code>: <code>CarveAtLocation</code>, <code>ClearRuntimeCarves</code>, <code>CarveStreamedCavesAtLocation</code>.</p>
+<h3>Delegates</h3>
+<pre><code class="language-cpp">// Broadcast when async task begins
+FIOCGenerationStartedSignature OnGenerationStarted;  // (AIOCProceduralActor*)
+
+// Broadcast when async task completes
+// bCancelled=true if superseded; bWillRegenerate=true if another request is pending
+FIOCGenerationFinishedSignature OnGenerationFinished; // (Actor*, bCancelled, bWillRegenerate)</code></pre>
+</section>
+
+<!-- ASYNC -->
+<section id="async" class="mb-20 scroll-mt-20">
+<h1>Async Generation Architecture</h1>
+<p>All generation runs on an <code>AnyBackgroundThreadNormalTask</code> worker. The pipeline stages are:</p>
+<ol>
+    <li><strong>Bounds validation</strong> &mdash; abort if MaxVoxelCount exceeded.</li>
+    <li><strong>Parallel voxel evaluation</strong> &mdash; <code>ParallelFor</code> across the X axis (multi-core, since v1.1).</li>
+    <li><strong>Biome Volume sampling</strong> &mdash; POD copies of FIOCBiomeData read (no UObject access on worker thread).</li>
+    <li><strong>Marching Cubes meshing</strong> via GeometryScripting.</li>
+    <li><strong>Laplacian smoothing</strong> passes.</li>
+    <li><strong>UV generation</strong> &mdash; triplanar box mapping.</li>
+    <li><strong>Smart vertex colors</strong> (optional).</li>
+    <li><strong>LOD mesh</strong> &mdash; same pipeline at VoxelSize &times; LODVoxelSizeMultiplier.</li>
+    <li><strong>Decoration scatter</strong> &mdash; HISM placements computed on background thread.</li>
+    <li><strong>Game thread commit</strong> &mdash; applies mesh, collision, material, HISM data.</li>
+</ol>
+<p>An <code>std::atomic&lt;bool&gt; bCancelRequested</code> inside <code>FIOCGenerationState</code> allows a new request to safely cancel an in-flight task without unsafe UObject access.</p>
+</section>
+
+<!-- BAKING -->
+<section id="baking" class="mb-20 scroll-mt-20">
+<h1>Static Mesh Baking &mdash; <code>IOC|Production|Bake</code></h1>
+<p>Once satisfied with a procedural cave, bake it to a permanent <code>UStaticMesh</code> asset. Press the <strong>Bake to Static Mesh</strong> CallInEditor button (Editor-only).</p>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Property</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td>BakedAssetBaseName</td><td>Asset name for the saved Static Mesh. Default <code>SM_IOC_Cave</code>.</td></tr>
+        <tr><td>BakeMaterialOverride</td><td>Optional material override for the baked mesh. Null uses the current cave material.</td></tr>
+        <tr><td>bBakeGeneratedLOD</td><td>Includes the LOD mesh as LOD1 on the baked Static Mesh.</td></tr>
+        <tr><td>bBakeEnableNanite</td><td>Enables Nanite on the baked mesh (API guarded for UE 5.5/5.6 compatibility).</td></tr>
+        <tr><td>BakeCollisionMode</td><td>ProjectDefault or ComplexAsSimple.</td></tr>
+        <tr><td>BakedLODScreenSize</td><td>Screen-size threshold for LOD1 transition. Default <code>0.25</code>. Range 0.01&ndash;1.0.</td></tr>
+    </tbody>
+</table>
+<div class="callout-tip">Baked Static Meshes have zero runtime generation cost and full Nanite/Lumen support. Use for hero set-pieces and story-critical areas where the cave shape is finalised.</div>
+</section>
+
+<!-- SPECTACULAR -->
+<section id="spectacular" class="mb-20 scroll-mt-20">
+<h1>Spectacular Features</h1>
+<h2>Domain Warping</h2>
+<p>Set <code>DomainWarpIntensity &gt; 0</code> to displace the noise sampling position by a secondary noise field. This creates <strong>folded, twisted, biopunk cave silhouettes</strong>. The Alien Hive preset uses a high intensity (~300). Available on both the Actor and StreamingManager.</p>
+<h2>Terrace Steps</h2>
+<p>Set <code>TerraceSteps &gt; 0</code> to quantise the density field into discrete horizontal bands. The Canyon Strata preset demonstrates this with a geological layered appearance. Also available on the StreamingManager and Biome Volumes.</p>
+<div class="grid grid-cols-2 gap-4 mt-4">
+    <div class="bg-cave-panel border border-cave-border rounded-lg p-4">
+        <div class="text-cave-purple font-semibold text-sm mb-2">Domain Warping</div>
+        <div class="text-xs text-slate-500">DomainWarpIntensity: 0 &rarr; 300<br>Best with: Alien Hive preset<br>Visual: folded, twisted caverns</div>
+    </div>
+    <div class="bg-cave-panel border border-cave-border rounded-lg p-4">
+        <div class="text-cave-amber font-semibold text-sm mb-2">Terrace Steps</div>
+        <div class="text-xs text-slate-500">TerraceSteps: 0 &rarr; 8&ndash;16<br>Best with: Canyon Strata preset<br>Visual: geological horizontal ledges</div>
+    </div>
+</div>
+</section>
+
+<!-- CONSOLE COMMANDS -->
+<section id="console" class="mb-20 scroll-mt-20">
+<h1>Console Commands</h1>
+<div class="callout-warn">The demo and showcase commands are <code>ECVF_Cheat</code> and are stripped from Shipping builds. <code>IOC.ValidateInstallation</code> and <code>IOC.OpenSetupWizard</code> are <code>ECVF_Default</code>, but they live in the editor module and so do not exist in a packaged game either.</div>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Command</th><th class="py-2">Description</th></tr></thead>
+    <tbody>
+        <tr><td><code>IOC.OpenSetupWizard</code></td><td>Opens the Setup Wizard. Same window as the Tools menu entry &mdash; useful when the menu is unavailable, or for scripting an editor session.</td></tr>
+        <tr><td><code>IOC.ValidateInstallation</code></td><td>Writes a dependency and content report to the Output Log. Run this first when anything looks wrong.</td></tr>
+        <tr><td><code>IOC.SpawnTunnelDemo</code></td><td>Spawns a Perlin Tunnel (0,0,0) &rarr; (3000,1500,800) with full lighting and a playable third-person character with flashlight.</td></tr>
+        <tr><td><code>IOC.SpawnSpectacular</code></td><td>Spawns an Alien Hive preset cave with Domain Warping at VoxelSize=50. Best single-command visual.</td></tr>
+        <tr><td><code>IOC.SpawnShowcase</code></td><td>Captioned flythrough of eight cave sections, with the diagnostic HUD and generation metrics.</td></tr>
+        <tr><td><code>IOC.SpawnShowcaseCapture</code></td><td>The same flythrough with captions only and no debug text &mdash; the one to record video from.</td></tr>
+        <tr><td><code>IOC.ClearShowcase</code></td><td>Removes the showcase and restores the viewport camera.</td></tr>
+        <tr><td><code>IOC.ClearAllDemos</code></td><td>Removes everything <em>any</em> demo command added &mdash; caves, lights and the playtest character. The commands are designed to leave no residue.</td></tr>
+    </tbody>
+</table>
+</section>
+
+<!-- BLUEPRINT API -->
+<section id="blueprint-api" class="mb-20 scroll-mt-20">
+<h1>Blueprint API Quick Reference</h1>
+<h3>AIOCProceduralActor</h3>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Function</th><th class="py-2">Notes</th></tr></thead>
+    <tbody>
+        <tr><td><code>GenerateCave()</code></td><td>Triggers async generation. Blueprint and C++ callable.</td></tr>
+        <tr><td><code>RequestRegeneration()</code></td><td>Cancels any in-flight task then triggers generation.</td></tr>
+        <tr><td><code>CarveAtLocation(FVector, float)</code></td><td>Authority-only sphere carve + regeneration.</td></tr>
+        <tr><td><code>ClearRuntimeCarves()</code></td><td>Clears carve history and regenerates. Authority only.</td></tr>
+        <tr><td><code>GetPerformanceSummary()</code></td><td>Returns a human-readable string of last generation stats.</td></tr>
+        <tr><td><code>OnGenerationStarted</code></td><td>Multicast delegate fired when generation begins.</td></tr>
+        <tr><td><code>OnGenerationFinished</code></td><td>Multicast delegate (Actor*, bCancelled, bWillRegenerate).</td></tr>
+    </tbody>
+</table>
+<h3>AIOCStreamingManager</h3>
+<table class="prop-table">
+    <thead><tr><th class="py-2">Function</th><th class="py-2">Notes</th></tr></thead>
+    <tbody>
+        <tr><td><code>RebuildAroundLocation(FVector)</code></td><td>Force-recentre chunk grid on a world location.</td></tr>
+        <tr><td><code>GetEffectiveChunkSize()</code></td><td>Returns voxel-aligned chunk dimensions used for grid spacing.</td></tr>
+        <tr><td><code>GetLoadedChunkCount()</code></td><td>Current loaded chunk count.</td></tr>
+        <tr><td><code>GetPendingChunkCount()</code></td><td>Chunks queued for loading.</td></tr>
+        <tr><td><code>CarveStreamedCavesAtLocation(FVector, float)</code></td><td>Authority-only. Applies carve to loaded chunks and persists for future loads.</td></tr>
+        <tr><td><code>ClearStreamedRuntimeCarves()</code></td><td>Clears global carve history and regenerates all chunks.</td></tr>
+    </tbody>
+</table>
+</section>
+
+<!-- TROUBLESHOOTING -->
+<section id="trouble" class="mb-20 scroll-mt-20">
+<h1>Troubleshooting</h1>
+<div class="space-y-4">
+
+    <details class="group bg-cave-panel border border-cave-border rounded-lg overflow-hidden">
+        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white font-medium text-slate-200">
+            <span>Cave generates nothing / empty mesh</span>
+            <svg class="w-4 h-4 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-cave-border/40 mt-2 space-y-2">
+            <p><strong>Cause:</strong> <code>NoiseFrequency</code> too high &mdash; noise oscillates inside a single voxel. <strong>Fix:</strong> Lower to 0.01 or less.</p>
+            <p><strong>Cause 2 (Tunnel mode):</strong> <code>TunnelRadius &lt; VoxelSize</code>. The tube is sub-voxel sized. <strong>Fix:</strong> Ensure TunnelRadius &gt; VoxelSize &times; 2.</p>
+        </div>
+    </details>
+
+    <details class="group bg-cave-panel border border-cave-border rounded-lg overflow-hidden">
+        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white font-medium text-slate-200">
+            <span>Minecraft / blocky voxel look</span>
+            <svg class="w-4 h-4 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-cave-border/40 mt-2">
+            <p><strong>Cause:</strong> SmoothIterations = 0. <strong>Fix:</strong> Increase to 3 (organic) or 5+ (rounded boulders).</p>
+        </div>
+    </details>
+
+    <details class="group bg-cave-panel border border-cave-border rounded-lg overflow-hidden">
+        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white font-medium text-slate-200">
+            <span>Streaming chunk seams / boundary mismatch</span>
+            <svg class="w-4 h-4 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-cave-border/40 mt-2 space-y-2">
+            <p><strong>Cause:</strong> bUseWorldSpaceNoise off on manually spawned chunks. <strong>Fix:</strong> StreamingManager forces this automatically. For manual chunks, set it true and use the same BaseSeed.</p>
+            <p><strong>Cause 2:</strong> ChunkSize not divisible by VoxelSize. Use GetEffectiveChunkSize() to verify snapped dimensions.</p>
+        </div>
+    </details>
+
+    <details class="group bg-cave-panel border border-cave-border rounded-lg overflow-hidden">
+        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white font-medium text-slate-200">
+            <span>Generation aborted &mdash; budget exceeded</span>
+            <svg class="w-4 h-4 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-cave-border/40 mt-2 space-y-2">
+            <p><strong>Fix A:</strong> Increase VoxelSize &mdash; halving it octuples the voxel count.</p>
+            <p><strong>Fix B:</strong> Reduce GenerationBounds and use the StreamingManager for large worlds.</p>
+            <p><strong>Fix C:</strong> Raise MaxVoxelCount / MaxGeneratedTriangles caps after profiling on target hardware.</p>
+        </div>
+    </details>
+
+    <details class="group bg-cave-panel border border-cave-border rounded-lg overflow-hidden">
+        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white font-medium text-slate-200">
+            <span>Player falls through cave floor</span>
+            <svg class="w-4 h-4 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-cave-border/40 mt-2 space-y-2">
+            <p><strong>Cause A:</strong> Generation still running when player is placed. <strong>Fix:</strong> Bind to <code>OnGenerationFinished</code> before spawning/teleporting.</p>
+            <p><strong>Cause B:</strong> Project Settings &gt; Physics ignores Complex collision. IOC uses ComplexAsSimple. Ensure physics settings do not bypass complex collision traces.</p>
+        </div>
+    </details>
+
+    <details class="group bg-cave-panel border border-cave-border rounded-lg overflow-hidden">
+        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white font-medium text-slate-200">
+            <span>Carves not appearing on all clients</span>
+            <svg class="w-4 h-4 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-cave-border/40 mt-2">
+            <p><strong>Cause:</strong> CarveAtLocation called on a client. It is BlueprintAuthorityOnly. <strong>Fix:</strong> Route through a Server RPC in your GameMode or PlayerController.</p>
+        </div>
+    </details>
+
+    <details class="group bg-cave-panel border border-cave-border rounded-lg overflow-hidden">
+        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white font-medium text-slate-200">
+            <span>Decoration instances overlapping or too dense</span>
+            <svg class="w-4 h-4 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-cave-border/40 mt-2 space-y-2">
+            <p><strong>Fix A:</strong> Lower Density on the scatter layer.</p>
+            <p><strong>Fix B:</strong> Set PoissonMinSeparation &gt; 0 (e.g. 100 cm) to enforce minimum spacing with Poisson disk sampling.</p>
+        </div>
+    </details>
+
+</div>
+</section>
+
+
+<!-- ABOUT -->
+<section id="about" class="mb-20 scroll-mt-20 border-t border-cave-border pt-16">
+<div class="relative bg-[#060a12] rounded-2xl border border-cave-green/15 overflow-hidden p-8 md:p-12">
+    <div class="absolute inset-0 bg-gradient-to-br from-cave-green/5 to-cave-blue/5 pointer-events-none"></div>
+    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-10 items-center">
+        <div class="flex justify-center lg:justify-start">
+            <div class="relative w-36 h-36">
+                <div class="absolute inset-0 rounded-full border border-cave-green/20 animate-[spin_12s_linear_infinite]"></div>
+                <div class="absolute inset-3 rounded-full border border-dashed border-cave-green/30 animate-[spin_18s_linear_infinite_reverse]"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-3xl font-bold text-cave-green tracking-tight">IOC</span>
                 </div>
             </div>
         </div>
-
-        <!-- NAVIGATION -->
-        <nav class="flex-1 overflow-y-auto pt-6 px-0 space-y-8" id="sidebar-nav">
-            <div>
-                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Start</h3>
-                <a href="#intro" class="nav-item active">Introduction</a>
-                <a href="#quickstart" class="nav-item">Quickstart & Demo</a>
+        <div class="lg:col-span-2">
+            <h2 class="text-2xl font-bold text-white mb-1 border-none mt-0">GregOrigin</h2>
+            <p class="text-slate-400 mb-5 text-sm leading-relaxed">High-performance C++ plugins for Unreal Engine. Built for production, documented for clarity, supported actively.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <a href="https://www.gregorigin.com" target="_blank" class="px-4 py-3 bg-cave-panel border border-cave-border rounded-lg hover:border-cave-green/40 transition-all text-sm font-mono text-center text-slate-400 hover:text-white">gregorigin.com</a>
+                <a href="https://discord.gg/nqYQ5mtmHb" target="_blank" class="px-4 py-3 bg-cave-panel border border-cave-border rounded-lg hover:border-cave-purple/40 transition-all text-sm font-mono text-center text-slate-400 hover:text-white">Discord Support</a>
+                <a href="https://gregorigin.com/Manuals/InstantOrganicCaves/" target="_blank" class="px-4 py-3 bg-cave-panel border border-cave-border rounded-lg hover:border-cave-blue/40 transition-all text-sm font-mono text-center text-slate-400 hover:text-white">Online Docs</a>
             </div>
-            <div>
-                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Features</h3>
-                <a href="#procedural-actor" class="nav-item">Procedural Actor</a>
-                <a href="#ux" class="nav-item text-greg-green">UX & Presets</a>
-                <a href="#tunnels" class="nav-item">Perlin Tunnels</a>
-                <a href="#textures" class="nav-item">Textures & UVs</a>
-                <a href="#pcg" class="nav-item">PCG Integration</a>
-            </div>
-            <div>
-                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Performance</h3>
-                <a href="#async" class="nav-item">Async Generation</a>
-                <a href="#baking" class="nav-item">Static Mesh Baking</a>
-            </div>
-            <div>
-                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Guides</h3>
-                <a href="#pipeline" class="nav-item">Math Pipeline</a>
-                <a href="#noise" class="nav-item">Noise & Scale</a>
-                <a href="#smoothing" class="nav-item">Smoothing</a>
-            </div>
-            <div>
-                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">Troubleshooting</h3>
-                <a href="#trouble" class="nav-item">Visual Artifacts</a>
-            </div>
-            <div>
-                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-4">About</h3>
-                <a href="#about" class="nav-item">Contact</a>
-            </div>
-        </nav>
-
-        <div class="p-6 border-t border-greg-border bg-greg-panel/50 text-[15px] text-slate-600 font-mono text-center">
-            Instant Organic Caves v1.0<br>
-            (c) Andras Gregori 2026
+            <p class="text-xs text-slate-700 mt-6 font-mono">Copyright (c) 2026 GregOrigin. All Rights Reserved.</p>
         </div>
-    </aside>
+    </div>
+</div>
+</section>
 
-    <!-- CONTENT AREA -->
-    <main class="flex-1 overflow-y-auto h-full bg-greg-dark scroll-smooth relative" id="main-scroller">
-        
-        <header class="sticky top-0 z-10 bg-greg-dark/80 backdrop-blur-md border-b border-greg-border px-8 py-4 flex items-center justify-between">
-            <div id="breadcrumbs" class="text-sm font-mono text-slate-500 flex items-center gap-2">
-                <span>Docs</span>
-                <span class="text-slate-700">/</span>
-                <span class="text-greg-green" id="breadcrumb-active">Introduction</span>
-            </div>
-            <span class="text-xs bg-greg-green/10 text-greg-green border border-greg-green/30 px-3 py-1 rounded font-mono">Verified UE 5.7</span>
-        </header>
+    </div>
+</main>
 
-        <div class="max-w-4xl mx-auto px-8 py-12 doc-content">
-            
-            <!-- SECTION: INTRO -->
-            <section id="intro" class="mb-24 scroll-mt-24">
-                <h1>Introduction</h1>
-                
-                <!-- ILLUSTRATION: PROCEDURAL LANDSCAPE -->
-                <div class="illustration-box h-64 flex items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#0B1120]">
-                    <svg viewBox="0 0 800 300" class="w-full h-full opacity-80">
-                        <defs>
-                            <linearGradient id="caveGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"/>
-                                <stop offset="100%" stop-color="#0B1120" stop-opacity="0"/>
-                            </linearGradient>
-                            <filter id="glow">
-                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                            </filter>
-                        </defs>
-                        <!-- Stylized Procedural Waves -->
-                        <path d="M0,150 Q100,50 200,150 T400,150 T600,150 T800,150 V300 H0 Z" fill="url(#caveGrad)" />
-                        <path d="M0,150 Q100,50 200,150 T400,150 T600,150 T800,150" fill="none" stroke="#10b981" stroke-width="2" filter="url(#glow)"/>
-                        
-                        <!-- Grid Overlay -->
-                        <path d="M0,150 L800,150 M200,0 V300 M400,0 V300 M600,0 V300" stroke="#1e293b" stroke-width="1" stroke-dasharray="4"/>
-                    </svg>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <h2 class="text-4xl font-bold text-white drop-shadow-2xl tracking-tighter">MATH <span class="text-greg-green">NOT</span> MESHES</h2>
-                    </div>
-                </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script>
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section[id]');
+    const scroller = document.getElementById('main-scroller');
+    const crumb    = document.getElementById('breadcrumb-active');
 
-                <p class="text-lg">
-                    <strong>Instant Organic Caves (IOC)</strong> replaces static asset packs with pure mathematics. It generates seamless, watertight, and infinitely varied tunnel networks using advanced 3D Perlin Noise algorithms, running asynchronously on the CPU.
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
-                    <div class="bg-greg-panel/50 border border-greg-border p-4 rounded-lg">
-                        <div class="text-greg-green font-bold flex items-center gap-2 mb-2">⚡ Asynchronous Core</div>
-                        <p class="text-sm text-slate-500 m-0 leading-tight">Generation runs on background threads. No frame hitches, no UI lag, even at high resolutions.</p>
-                    </div>
-                    <div class="bg-greg-panel/50 border border-greg-border p-4 rounded-lg">
-                        <div class="text-blue-400 font-bold flex items-center gap-2 mb-2">🌊 Perlin Tunnels</div>
-                        <p class="text-sm text-slate-500 m-0 leading-tight">Generate organic, winding tunnels connecting any two points in 3D space automatically.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECTION: QUICKSTART -->
-            <section id="quickstart" class="mb-24 scroll-mt-24">
-                <h1>Quickstart & Demo</h1>
-                <p>IOC includes a complete "Game Ready" demo scene generator.</p>
-
-                <div class="bg-[#0D1117] p-6 rounded-lg border border-greg-border my-6 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-4 opacity-20">
-                        <svg class="w-32 h-32 text-greg-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    </div>
-                    
-                    <h3 class="text-white mt-0 mb-4">🚀 Instant Demo Command</h3>
-                    <ol class="list-decimal ml-5 space-y-3 text-slate-400 font-mono text-sm">
-                        <li>Open Output Log or Console (<code class="text-greg-green">~</code>)</li>
-                        <li>Type: <code class="text-white bg-slate-800 px-2 py-1 rounded select-all">IOC.SpawnTunnelDemo</code></li>
-                        <li>Press Enter</li>
-                    </ol>
-                    
-                    <div class="mt-6 p-4 bg-greg-green/5 border border-greg-green/20 rounded-lg">
-                        <p class="text-sm text-greg-green font-medium m-0">
-                            <strong>What happens?</strong><br>
-                            1. A procedural Perlin Tunnel spawns connecting (0,0,0) to (3000, 1500, 800).<br>
-                            2. A complete lighting rig (Sun, Sky, Fog, PostProcess) is created.<br>
-                            3. A playable <strong>3rd Person Character</strong> with a Flashlight is spawned and possessed.<br>
-                            <br>
-                            You can immediately walk around and explore the generated geometry.
-                        </p>
-                    </div>
-                </div>
-
-                <h3>Manual Setup</h3>
-                <p>1. Open the <strong>Place Actors</strong> panel and search for <code>IOC</code>.</p>
-                <p>2. Drag <code>IOCProceduralActor</code> into the level.</p>
-                <p>3. In the Details Panel, configure your <strong>Generation Bounds</strong> and <strong>Voxel Size</strong>.</p>
-            </section>
-
-            <!-- SECTION: PROCEDURAL ACTOR -->
-            <section id="procedural-actor" class="mb-24 scroll-mt-24">
-                <h1>Procedural Actor</h1>
-                <p>The core component for manual generation. Configure bounds, voxels, and smoothing here.</p>
-
-                <!-- ILLUSTRATION: BOUNDS -->
-                <div class="illustration-box h-48 flex items-center justify-center p-8">
-                    <svg viewBox="0 0 400 150" class="w-full h-full">
-                        <!-- Box -->
-                        <rect x="50" y="25" width="300" height="100" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/>
-                        <text x="200" y="20" fill="#3b82f6" font-size="12" font-family="monospace" text-anchor="middle">Generation Bounds (Flexible Vector)</text>
-                        <!-- Voxels -->
-                        <g fill="#3b82f6" opacity="0.2">
-                            <rect x="60" y="35" width="20" height="20"/>
-                            <rect x="90" y="35" width="20" height="20"/>
-                            <rect x="60" y="65" width="20" height="20"/>
-                        </g>
-                        <!-- Arrow -->
-                        <path d="M 360 75 L 390 75" stroke="#fff" marker-end="url(#arrow)" />
-                        <text x="200" y="80" fill="#fff" font-size="14" font-family="monospace" text-anchor="middle">Voxel Size</text>
-                    </svg>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="border-b border-greg-border text-greg-green">
-                                <th class="py-2 w-1/3">Property</th>
-                                <th class="py-2">Description</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-greg-border/50">
-                            <tr>
-                                <td class="py-3 font-mono text-white">GenerationBounds</td>
-                                <td class="py-3">Defines the X, Y, Z size of the generation volume. No longer forced to be a cube. Allows long, flat tunnels or tall shafts.</td>
-                            </tr>
-                            <tr>
-                                <td class="py-3 font-mono text-white">VoxelSize</td>
-                                <td class="py-3">The size of each processing cube. Default: <code>100.0</code> (1m).</td>
-                            </tr>
-                            <tr>
-                                <td class="py-3 font-mono text-white">NoiseFrequency</td>
-                                <td class="py-3">Controls the scale of the organic noise features. Lower values (e.g. 0.005) create larger, smoother caves.</td>
-                            </tr>
-                            <tr>
-                                <td class="py-3 font-mono text-white">SmoothIterations</td>
-                                <td class="py-3">Applies Laplacian smoothing to the mesh vertices. Removes the "blocky" look of voxels. Default: 3.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- SECTION: UX & PRESETS -->
-            <section id="ux" class="mb-24 scroll-mt-24">
-                <h1>UX & Presets</h1>
-                <p>New in v1.1: Intelligent tools to speed up your workflow.</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
-                    <div class="bg-greg-panel p-6 rounded-lg border border-greg-border">
-                        <h3 class="mt-0 mb-4 text-white">🎛️ Cave Presets</h3>
-                        <p class="text-sm">Don't guess the math. Use the <strong>CavePreset</strong> dropdown to instantly configure the actor for specific styles:</p>
-                        <ul class="text-sm space-y-2 mt-4 text-slate-400">
-                            <li><strong class="text-white">Large Tunnel:</strong> Wide, majestic passages (Radius 450).</li>
-                            <li><strong class="text-white">Tight Crawl:</strong> Claustrophobic, narrow squeezes (Radius 150).</li>
-                            <li><strong class="text-white">Open Cavern:</strong> Massive underground halls (Radius 1200).</li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-greg-panel p-6 rounded-lg border border-greg-border">
-                        <h3 class="mt-0 mb-4 text-white">👁️ Visual Debugging</h3>
-                        <p class="text-sm">Enable <code>bShowDebugViz</code> to see exactly where your cave will generate <em>before</em> you press play.</p>
-                        <ul class="text-sm space-y-2 mt-4 text-slate-400">
-                            <li><span class="text-cyan-400">Cyan Box</span>: Represents the <strong>Generation Bounds</strong>.</li>
-                            <li><span class="text-green-400">Green Line</span>: Shows the guaranteed path of the <strong>Perlin Tunnel</strong>.</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECTION: TUNNELS -->
-            <section id="tunnels" class="mb-24 scroll-mt-24">
-                <h1>Perlin Tunnels</h1>
-                <p>Enable <code>bGenerateTunnel</code> to switch from "Blob Mode" to "Tunnel Mode". This connects two points with a guaranteed organic path.</p>
-
-                <!-- ILLUSTRATION: TUNNEL -->
-                <div class="illustration-box h-64 flex items-center justify-center bg-black/50">
-                    <svg viewBox="0 0 600 200" class="w-full h-full">
-                        <!-- Points -->
-                        <circle cx="50" cy="100" r="8" fill="#10b981"/>
-                        <text x="50" y="130" fill="#10b981" font-size="12" font-family="monospace" text-anchor="middle">Start</text>
-                        
-                        <circle cx="550" cy="100" r="8" fill="#10b981"/>
-                        <text x="550" y="130" fill="#10b981" font-size="12" font-family="monospace" text-anchor="middle">End</text>
-
-                        <!-- Segment -->
-                        <line x1="50" y1="100" x2="550" y2="100" stroke="#1e293b" stroke-width="2" stroke-dasharray="4"/>
-
-                        <!-- Organic Shell -->
-                        <path d="M50,100 Q150,40 300,100 T550,100" fill="none" stroke="white" stroke-width="40" opacity="0.1" stroke-linecap="round"/>
-                        <path d="M50,100 Q150,60 300,80 T550,100" fill="none" stroke="white" stroke-width="35" opacity="0.2" stroke-linecap="round"/>
-                        
-                        <!-- Logic Overlay -->
-                        <text x="300" y="180" fill="#64748b" font-size="12" font-family="monospace" text-anchor="middle">Distance Field + Perlin Noise Radius</text>
-                    </svg>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 my-6">
-                    <div>
-                        <h3 class="text-white mt-0">How it works</h3>
-                        <p class="text-sm">Instead of random noise, the algorithm calculates a **Distance Field** to a line segment defined by <code>TunnelStart</code> and <code>TunnelEnd</code>.</p>
-                        <p class="text-sm">It then adds 3D Perlin Noise to the radius, creating an organic, uneven tube that is guaranteed to connect the two points.</p>
-                    </div>
-                    <div class="bg-greg-panel border border-greg-border p-4 rounded-lg">
-                        <code class="text-xs block mb-2 text-slate-500">New Parameters</code>
-                        <ul class="text-sm space-y-2 m-0 ml-4 list-none">
-                            <li><span class="text-greg-green">TunnelStart</span>: Start coordinate (Local Space).</li>
-                            <li><span class="text-greg-green">TunnelEnd</span>: End coordinate (Local Space).</li>
-                            <li><span class="text-greg-green">TunnelRadius</span>: Base width of the tunnel.</li>
-                            <li><span class="text-greg-green">WallThickness</span>: Thickness of the tunnel shell.</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECTION: TEXTURES -->
-            <section id="textures" class="mb-24 scroll-mt-24">
-                <h1>Textures & Content</h1>
-                <p>IOC now comes with built-in content and automatic UV generation.</p>
-
-                <!-- ILLUSTRATION: TRIPLANAR -->
-                <div class="illustration-box h-48 flex items-center justify-center">
-                    <svg viewBox="0 0 300 150" class="w-full h-full">
-                        <!-- Cube -->
-                        <path d="M150,20 L200,45 L150,70 L100,45 Z" fill="#3b82f6" stroke="#1e293b" stroke-width="2"/> <!-- Top (Z) -->
-                        <path d="M100,45 L150,70 V120 L100,95 Z" fill="#ef4444" stroke="#1e293b" stroke-width="2"/> <!-- Left (X) -->
-                        <path d="M150,70 L200,45 V95 L150,120 Z" fill="#10b981" stroke="#1e293b" stroke-width="2"/> <!-- Right (Y) -->
-                        
-                        <!-- Labels -->
-                        <text x="150" y="48" fill="white" font-size="10" font-family="monospace" text-anchor="middle">Z (Blue)</text>
-                        <text x="120" y="90" fill="white" font-size="10" font-family="monospace" text-anchor="middle">X (Red)</text>
-                        <text x="180" y="90" fill="white" font-size="10" font-family="monospace" text-anchor="middle">Y (Green)</text>
-                    </svg>
-                </div>
-
-                <h3>Triplanar Projection</h3>
-                <p>The system automatically generates UV coordinates for the procedural mesh using a <strong>Box Mapping (Triplanar)</strong> strategy. UVs are projected based on the dominant normal (X, Y, or Z) of each face.</p>
-
-                <h3>Included Assets</h3>
-                <p>A Python Automation Script generates optimized assets on first run (or manually via <code>IOC_Setup.py</code>).</p>
-                <ul class="space-y-4 mt-4">
-                    <li>
-                        <strong class="text-white">BP_IOC_Cave:</strong> A Blueprint wrapper for easy drag-and-drop usage.
-                    </li>
-                    <li>
-                        <strong class="text-white">MI_IOC_CaveWalls:</strong> A customized Material Instance ready for rock textures.
-                    </li>
-                    <li>
-                        <strong class="text-white">TextureTiling:</strong> Controls the scale of the UVs. Default is <code>0.01</code>.
-                    </li>
-                </ul>
-            </section>
-
-            <!-- SECTION: PCG -->
-            <section id="pcg" class="mb-24 scroll-mt-24">
-                <h1>PCG Integration</h1>
-                <p>The <code>IOC Voxel Core</code> PCG node brings this logic into the Procedural Content Generation framework.</p>
-
-                <p>The node now supports a <strong>Generation Mode</strong> switch:</p>
-                <ul class="space-y-2">
-                    <li><strong class="text-white">Cellular Automata:</strong> The classic "Game of Life" cave generation logic (Random noise + neighbor smoothing).</li>
-                    <li><strong class="text-white">Perlin Tunnel:</strong> The new distance-field based tunnel generation logic, matching the Actor implementation.</li>
-                </ul>
-
-                <p>This allows you to generate point clouds representing cave walls inside your PCG graphs, enabling the spawning of instanced meshes, foliage, or lights along the cave surface.</p>
-            </section>
-
-            <!-- SECTION: ASYNC -->
-            <section id="async" class="mb-24 scroll-mt-24">
-                <h1>Performance: Async Generation</h1>
-                <p>
-                    Generating millions of voxels and triangulation is computationally expensive. IOC creates a background task (<code class="text-greg-green">EAsyncExecution::ThreadPool</code>) for all heavy math.
-                </p>
-                <div class="bg-blue-500/10 border border-blue-500/30 p-4 rounded-lg my-4">
-                    <p class="m-0 text-sm text-blue-300">
-                        <strong>Result:</strong> You can drag the generation sliders in real-time or spawn massive caves during gameplay without freezing the main thread. The mesh updates visually as soon as the background task completes.
-                    </p>
-                </div>
-            </section>
-
-            <!-- SECTION: BAKING -->
-            <section id="baking" class="mb-32 scroll-mt-24">
-                <h1>Static Mesh Baking</h1>
-                <p>
-                    While <code>UDynamicMeshComponent</code> is powerful for runtime editing, for shipping games you often want <strong>Static Meshes</strong> to leverage Nanite and Lumen fully.
-                </p>
-                <p>
-                    IOC includes a <strong>Bake To Static Mesh</strong> button in the Details panel (Editor Only). This allows you to freeze the current procedural result into a permanent asset in your Content Browser.
-                </p>
-            </section>
-
-            <!-- SECTION: PIPELINE (MATH) -->
-            <section id="pipeline" class="mb-24 scroll-mt-24">
-                <h1>The Math Pipeline</h1>
-                <p>IOC does not use standard Marching Cubes. It uses a custom pipeline to achieve a stylized, organic look while maintaining topology that supports Laplacians.</p>
-
-                <ol class="list-decimal list-outside ml-5 space-y-4 marker:text-greg-green marker:font-bold">
-                    <li>
-                        <strong class="text-white">World-Space Perlin Field:</strong> 
-                        <p class="text-sm mt-1">We sample 3D noise using coordinate jitter to avoid "Integer Lattice" artifacts (zebra striping). Coordinates are divided by <code>NoiseScale</code>.</p>
-                        <pre><code class="language-cpp">float Noise = FMath::PerlinNoise3D((WorldPos + Jitter) / Scale);</code></pre>
-                    </li>
-                    <li>
-                        <strong class="text-white">Linear Vertex Cache:</strong>
-                        <p class="text-sm mt-1">A cached vertex grid ensures that adjacent voxels share vertices ("Welding"). This prevents the mesh from shattering into individual cubes during smoothing.</p>
-                    </li>
-                    <li>
-                        <strong class="text-white">Face Culling:</strong>
-                        <p class="text-sm mt-1">The mesher only generates triangles when a Solid voxel touches an Empty voxel. This creates a hollow shell with no internal geometry.</p>
-                    </li>
-                    <li>
-                        <strong class="text-white">Laplacian Smoothing:</strong>
-                        <p class="text-sm mt-1">The algorithm iterates over the welded mesh, pulling vertices toward the average of their neighbors. This turns the blocky grid into smooth, eroded rock.</p>
-                    </li>
-                </ol>
-            </section>
-
-            <!-- SECTION: NOISE -->
-            <section id="noise" class="mb-24 scroll-mt-24">
-                <h1>Noise & Scale Guide</h1>
-                <p>Understanding the relationship between <code>Voxel Size</code> and <code>Noise Frequency</code> is critical to avoiding artifacts.</p>
-
-                <div class="space-y-4 mt-6">
-                    <div class="flex gap-4 p-4 bg-greg-panel border border-greg-border rounded-lg items-start">
-                        <div class="text-2xl h-10 w-10 flex items-center justify-center bg-green-500/10 rounded-full border border-green-500/20">✅</div>
-                        <div>
-                            <strong class="text-green-400 block mb-1">Frequency 0.005</strong>
-                            <p class="text-xs text-slate-500 m-0">Large, majestic caverns. The noise frequency is low enough that multiple voxels form continuous walls.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4 p-4 bg-greg-panel border border-greg-border rounded-lg items-start">
-                        <div class="text-2xl h-10 w-10 flex items-center justify-center bg-red-500/10 rounded-full border border-red-500/20">❌</div>
-                        <div>
-                            <strong class="text-red-400 block mb-1">Frequency 0.1+</strong>
-                            <p class="text-xs text-slate-500 m-0"><strong>White Noise Artifacts.</strong> If the frequency is too high, the noise changes randomly every single block. This creates isolated floating cubes ("Confetti") that shatter when smoothed.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECTION: SMOOTHING -->
-            <section id="smoothing" class="mb-32 scroll-mt-24">
-                <h1>Organic Smoothing</h1>
-                <p>IOC uses a custom "Relaxation" pass to create rock-like surfaces.</p>
-
-                <h3>Parameters</h3>
-                <ul class="space-y-4">
-                    <li class="bg-greg-panel p-4 rounded border-l-2 border-blue-500">
-                        <span class="text-white font-bold block mb-1">Smooth Iterations</span>
-                        How many times the relaxation kernel runs.
-                        <br><code>0</code> = Minecraft (Blocky).
-                        <br><code>3</code> = Chiseled Rock.
-                        <br><code>10</code> = Melted Wax / Alien Hive.
-                    </li>
-                </ul>
-            </section>
-
-            <!-- SECTION: TROUBLESHOOTING -->
-            <section id="trouble" class="mb-32 scroll-mt-24">
-                <h1>Troubleshooting & FAQ</h1>
-                <p class="text-lg mb-8">
-                    Procedural generation is a balancing act. This guide covers common artifacts.
-                </p>
-
-                <!-- 1. THE SHATTERED GLASS EFFECT -->
-                <div class="mb-12 border-l-4 border-red-500 pl-6 py-2">
-                    <h2 class="text-white mt-0">Visual Artifact: "Shattered Glass" or "Confetti"</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
-                        <!-- SVG Illustration: Shattered -->
-                        <div class="illustration-box h-40 bg-black flex items-center justify-center">
-                            <svg viewBox="0 0 200 100" class="w-full h-full">
-                                <polygon points="20,80 40,20 60,80" fill="none" stroke="#ef4444" stroke-width="2"/>
-                                <polygon points="70,90 90,10 110,60" fill="none" stroke="#ef4444" stroke-width="2"/>
-                                <polygon points="120,70 140,30 160,80" fill="none" stroke="#ef4444" stroke-width="2"/>
-                                <text x="100" y="50" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">DISCONNECTED FACES</text>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-red-400 mt-0">Cause: High Frequency</h3>
-                            <p class="text-sm">Noise Scale is too close to Voxel Size. The math oscillates inside a single cube.</p>
-                            <p class="text-sm"><strong>Fix:</strong> Lower <code>NoiseFrequency</code> to 0.01 or less.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. THE BLOCKY LOOK -->
-                <div class="mb-12 border-l-4 border-blue-500 pl-6 py-2">
-                    <h2 class="text-white mt-0">Visual Artifact: "Minecraft / Voxel Look"</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
-                        <div>
-                            <h3 class="text-blue-400 mt-0">The Problem</h3>
-                            <p class="text-sm">The cave looks like stacked cubes. There are no curves, only 90-degree angles.</p>
-                            
-                            <div class="bg-greg-panel p-4 rounded mt-4">
-                                <code class="text-xs block mb-2 text-slate-500">IOCProceduralActor Settings</code>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span>Smooth Iterations:</span>
-                                    <span class="text-red-400">0</span>
-                                </div>
-                            </div>
-
-                            <div class="bg-greg-green/10 border border-greg-green/30 p-4 rounded-lg mt-4">
-                                <strong class="text-greg-green block text-xs uppercase tracking-wide mb-1">The Fix</strong>
-                                <p class="text-sm m-0 text-white">Increase <strong>Smooth Iterations</strong> to <span class="bg-white/10 px-1 rounded">3</span> or <span class="bg-white/10 px-1 rounded">5</span>.</p>
-                            </div>
-                        </div>
-
-                        <!-- SVG Illustration: Blocky -->
-                        <div class="illustration-box h-40 bg-black flex items-center justify-center">
-                            <svg viewBox="0 0 200 100" class="w-full h-full">
-                                <rect x="40" y="40" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2"/>
-                                <rect x="60" y="40" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2"/>
-                                <rect x="60" y="20" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2"/>
-                                <text x="100" y="80" fill="#3b82f6" font-size="10" font-family="monospace" text-anchor="middle">NO SMOOTHING</text>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FAQ ACCORDION -->
-                <div class="space-y-4 mt-16">
-                    <h2 class="text-white border-none mb-6">Frequently Asked Questions</h2>
-
-                    <!-- Q1 -->
-                    <details class="group bg-greg-panel/50 border border-greg-border rounded-lg overflow-hidden transition-all duration-300 open:bg-greg-panel">
-                        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white">
-                            <span class="font-medium text-slate-200">Why does the generation take time?</span>
-                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </summary>
-                        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-greg-border/50 mt-2">
-                            <p>Calculating 3D volume scales cubically. A bounds of 5000x5000x2000 with voxel size 50 is millions of calculations. IOC runs this asynchronously to keep the editor responsive, but the task still takes CPU time to complete.</p>
-                        </div>
-                    </details>
-
-                    <!-- Q2 -->
-                    <details class="group bg-greg-panel/50 border border-greg-border rounded-lg overflow-hidden transition-all duration-300 open:bg-greg-panel">
-                        <summary class="flex items-center justify-between p-4 cursor-pointer hover:text-white">
-                            <span class="font-medium text-slate-200">How do I make the cave collision work?</span>
-                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </summary>
-                        <div class="p-4 pt-0 text-sm text-slate-400 border-t border-greg-border/50 mt-2">
-                            <p>IOC uses <strong>Complex as Simple</strong> collision. This gives perfect accuracy matching the visible mesh.</p>
-                            <ul class="list-disc ml-4 mt-2">
-                                <li>Ensure your Player Actor has a standard Capsule Component.</li>
-                                <li>Ensure Project Settings > Physics is not set to ignore Complex collision.</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
-            </section>
-
-            <!-- ABOUT -->
-            <section id="about" class="mb-24 scroll-mt-24 border-t border-greg-border pt-16">
-                <div class="relative bg-[#080c14] rounded-2xl border border-greg-green/20 overflow-hidden p-8 md:p-12 group">
-                    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
-                        <div class="flex justify-center lg:justify-start">
-                            <div class="relative w-48 h-48">
-                                <div class="absolute inset-0 rounded-full border border-greg-green/30 animate-[spin_10s_linear_infinite]"></div>
-                                <div class="absolute inset-4 rounded-full border border-dashed border-greg-green/50 animate-[spin_15s_linear_infinite_reverse]"></div>
-                                <div class="absolute inset-0 flex items-center justify-center bg-greg-dark/80 backdrop-blur-sm rounded-full border border-greg-border">
-                                    <h1 class="text-4xl text-greg-green font-bold">IOC</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="lg:col-span-2 text-center lg:text-left">
-                            <h2 class="text-3xl font-bold text-white mb-2 tracking-tight">GregOrigin</h2>
-                            <p class="text-lg text-slate-300 mb-6 leading-relaxed">
-                                High-performance C++ plugins for Unreal Engine.
-                            </p>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <a href="https://www.gregorigin.com" target="_blank" class="group/btn relative px-4 py-3 bg-[#0f172a] border border-greg-border rounded-lg hover:border-greg-green/50 transition-all duration-300 flex items-center justify-center gap-3">
-                                    <span class="font-mono text-sm group-hover/btn:text-white font-medium z-10">gregorigin.com</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        </div>
-    </main>
-
-    <!-- SCRIPTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-
-    <script>
-        // Navigation Spy
-        const navLinks = document.querySelectorAll('.nav-item');
-        const sections = document.querySelectorAll('section');
-        const mainScroller = document.getElementById('main-scroller');
-        const breadcrumb = document.getElementById('breadcrumb-active');
-
-        setTimeout(() => checkScroll(), 100);
-        mainScroller.addEventListener('scroll', () => checkScroll());
-
-        function checkScroll() {
-            let current = '';
-            sections.forEach(section => {
-                if (mainScroller.scrollTop >= (section.offsetTop - 150)) {
-                    current = '#' + section.getAttribute('id');
+    function updateNav() {
+        let current = sections[0]?.id ?? '';
+        sections.forEach(s => {
+            if (scroller.scrollTop >= s.offsetTop - 120) current = s.id;
+        });
+        navLinks.forEach(a => {
+            const active = a.getAttribute('href') === '#' + current;
+            a.classList.toggle('active', active);
+            if (active) {
+                crumb.textContent = a.textContent.trim();
+                if (!document.querySelector('#sidebar-nav:hover')) {
+                    a.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
-            });
-
-            if (current) {
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === current) {
-                        link.classList.add('active');
-                        breadcrumb.textContent = link.textContent.trim();
-                        if (!document.querySelector('#sidebar-nav:hover')) {
-                            link.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }
-                    }
-                });
             }
-        }
-    </script>
+        });
+    }
+
+    scroller.addEventListener('scroll', updateNav, { passive: true });
+    setTimeout(updateNav, 50);
+</script>
 </body>
 </html>

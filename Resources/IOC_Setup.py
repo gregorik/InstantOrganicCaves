@@ -1,6 +1,22 @@
 import unreal
 import os
 
+
+def _connect(from_expr, from_output, to_expr, to_input):
+    """Connect two expressions and fail loudly if UE rejects the names.
+
+    ConnectMaterialExpressions returns false for an unknown pin or output name
+    and changes nothing. Ignoring that return is how the shipped materials ended
+    up with dead wires, so treat it as an error here.
+    """
+    if not unreal.MaterialEditingLibrary.connect_material_expressions(
+            from_expr, from_output, to_expr, to_input):
+        raise RuntimeError(
+            "connect failed: {}.{} -> {}.{} (check the exact pin/output name)".format(
+                from_expr.get_class().get_name(), from_output or "<default>",
+                to_expr.get_class().get_name(), to_input))
+
+
 def create_smart_material(asset_path, asset_name):
     asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
     package_path = asset_path
@@ -47,14 +63,17 @@ def create_smart_material(asset_path, asset_name):
     # Floor -> B of Lerp 1
     unreal.MaterialEditingLibrary.connect_material_expressions(color_floor, "", lerp_floor, "B")
     # Vtx Green -> Alpha of Lerp 1
-    unreal.MaterialEditingLibrary.connect_material_expressions(vtx_color, "Green", lerp_floor, "Alpha")
+    # VertexColor outputs are R/G/B/A -- "Green"/"Blue" silently failed, which
+    # left both Alpha pins on ConstAlpha 0.5 and killed the whole blend.
+    # The generator packs FVector4f(Wall, Floor, Ceiling, 1), so G is floor.
+    _connect(vtx_color, "G", lerp_floor, "Alpha")
 
     # Lerp 1 -> A of Lerp 2
     unreal.MaterialEditingLibrary.connect_material_expressions(lerp_floor, "", lerp_ceiling, "A")
     # Ceiling -> B of Lerp 2
     unreal.MaterialEditingLibrary.connect_material_expressions(color_ceiling, "", lerp_ceiling, "B")
     # Vtx Blue -> Alpha of Lerp 2
-    unreal.MaterialEditingLibrary.connect_material_expressions(vtx_color, "Blue", lerp_ceiling, "Alpha")
+    _connect(vtx_color, "B", lerp_ceiling, "Alpha")
 
     # Final Connect
     unreal.MaterialEditingLibrary.connect_material_property(lerp_ceiling, "", unreal.MaterialProperty.MP_BASE_COLOR)

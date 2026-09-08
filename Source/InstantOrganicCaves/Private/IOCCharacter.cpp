@@ -2,11 +2,13 @@
 
 #include "IOCCharacter.h"
 #include "IOCProceduralActor.h"
+#include "InstantOrganicCavesModule.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SpotLightComponent.h"
+#include "Components/SplineComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
@@ -68,11 +70,19 @@ AIOCCharacter::AIOCCharacter()
     JumpAction = CreateDefaultSubobject<UInputAction>(TEXT("IA_IOC_Jump"));
     JumpAction->ValueType = EInputActionValueType::Boolean;
 
+    // Modifiers are default subobjects, not NewObject: calling NewObject during a UObject
+    // constructor runs while the CDO is still being built and produces objects with the wrong
+    // flags. CreateDefaultSubobject is the supported way to compose sub-objects here.
+    NegateMoveBackward  = CreateDefaultSubobject<UInputModifierNegate>(TEXT("IOC_NegateMoveBackward"));
+    NegateMoveLeft      = CreateDefaultSubobject<UInputModifierNegate>(TEXT("IOC_NegateMoveLeft"));
+    NegateLookMouseY    = CreateDefaultSubobject<UInputModifierNegate>(TEXT("IOC_NegateLookMouseY"));
+    NegateLookGamepadY  = CreateDefaultSubobject<UInputModifierNegate>(TEXT("IOC_NegateLookGamepadY"));
+
     // MoveForward: W = +1, S = -1, Gamepad left stick Y is already signed
     DefaultMappingContext->MapKey(MoveForwardAction, EKeys::W);
     {
         FEnhancedActionKeyMapping& M = DefaultMappingContext->MapKey(MoveForwardAction, EKeys::S);
-        M.Modifiers.Add(NewObject<UInputModifierNegate>(DefaultMappingContext));
+        M.Modifiers.Add(NegateMoveBackward);
     }
     DefaultMappingContext->MapKey(MoveForwardAction, EKeys::Gamepad_LeftY);
 
@@ -80,7 +90,7 @@ AIOCCharacter::AIOCCharacter()
     DefaultMappingContext->MapKey(MoveRightAction, EKeys::D);
     {
         FEnhancedActionKeyMapping& M = DefaultMappingContext->MapKey(MoveRightAction, EKeys::A);
-        M.Modifiers.Add(NewObject<UInputModifierNegate>(DefaultMappingContext));
+        M.Modifiers.Add(NegateMoveLeft);
     }
     DefaultMappingContext->MapKey(MoveRightAction, EKeys::Gamepad_LeftX);
 
@@ -91,11 +101,11 @@ AIOCCharacter::AIOCCharacter()
     // LookY: negate so moving mouse up = looking up (matches legacy -1.0 scale)
     {
         FEnhancedActionKeyMapping& M = DefaultMappingContext->MapKey(LookYAction, EKeys::MouseY);
-        M.Modifiers.Add(NewObject<UInputModifierNegate>(DefaultMappingContext));
+        M.Modifiers.Add(NegateLookMouseY);
     }
     {
         FEnhancedActionKeyMapping& M = DefaultMappingContext->MapKey(LookYAction, EKeys::Gamepad_RightY);
-        M.Modifiers.Add(NewObject<UInputModifierNegate>(DefaultMappingContext));
+        M.Modifiers.Add(NegateLookGamepadY);
     }
 
     // Jump
@@ -107,45 +117,107 @@ void AIOCCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
+    AddDefaultMappingContext();
+
+    // Authority only: moving the pawn on a client desynchronises it from the server, and the
+    // server will correct it back a moment later anyway.
+    if (bSnapToCaveEntranceOnBeginPlay && HasAuthority())
+    {
+        SnapToNearestCaveEntrance();
+    }
+}
+
+void AIOCCharacter::SnapToNearestCaveEntrance()
+{
+    UWorld* World = GetWorld();
+    if (!World)
+    {
+        return;
+    }
+
+    // Pick the nearest cave rather than whichever one the actor iterator happens to yield
+    // first: in a level with several caves (or a streaming manager) the old code teleported
+    // the player to an arbitrary one, often across the map.
+    const FVector CurrentLocation = GetActorLocation();
+    const AIOCProceduralActor* BestCave = nullptr;
+    double BestDistanceSq = TNumericLimits<double>::Max();
+
+    for (TActorIterator<AIOCProceduralActor> It(World); It; ++It)
+    {
+        const AIOCProceduralActor* Cave = *It;
+        if (!Cave || Cave->IsActorBeingDestroyed())
+        {
+            continue;
+        }
+
+        const double DistanceSq = FVector::DistSquared(Cave->GetActorLocation(), CurrentLocation);
+        if (DistanceSq < BestDistanceSq)
+        {
+            BestDistanceSq = DistanceSq;
+            BestCave = Cave;
+        }
+    }
+
+    if (!BestCave)
+    {
+        return;
+    }
+
+    // In spline mode TunnelStart is unused, so the entrance is the start of the spline.
+    FVector EntranceLocal = BestCave->TunnelStart;
+    if (BestCave->bUseSpline && BestCave->CaveSpline && BestCave->CaveSpline->GetNumberOfSplinePoints() > 0)
+    {
+        EntranceLocal = BestCave->CaveSpline->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::Local);
+    }
+
+    // Entrance floor: directly below the tunnel centreline by TunnelRadius.
+    EntranceLocal.Z -= BestCave->TunnelRadius;
+
+    FVector EntranceWorld = BestCave->GetActorTransform().TransformPosition(EntranceLocal);
+    // Raise by capsule half height so the character stands on the tunnel floor.
+    EntranceWorld.Z += GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+
+    SetActorLocation(EntranceWorld, false, nullptr, ETeleportType::TeleportPhysics);
+}
+
+void AIOCCharacter::PossessedBy(AController* NewController)
+{
+    Super::PossessedBy(NewController);
+    AddDefaultMappingContext();
+}
+
+void AIOCCharacter::PawnClientRestart()
+{
+    Super::PawnClientRestart();
+    AddDefaultMappingContext();
+}
+
+void AIOCCharacter::AddDefaultMappingContext()
+{
     if (APlayerController* PC = Cast<APlayerController>(Controller))
     {
+        if (!PC->IsLocalController())
+        {
+            return;
+        }
+
         if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
             ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
         {
             Subsystem->AddMappingContext(DefaultMappingContext, 0);
         }
     }
-
-    // Teleport to the cave entrance so the character starts inside the tunnel
-    if (GetWorld())
-    {
-        for (TActorIterator<AIOCProceduralActor> It(GetWorld()); It; ++It)
-        {
-            AIOCProceduralActor* Cave = *It;
-            if (!Cave) continue;
-
-            // Entrance floor in local space: directly below the tunnel centerline by TunnelRadius
-            FVector EntranceFloorLocal = Cave->TunnelStart;
-            EntranceFloorLocal.Z -= Cave->TunnelRadius;
-
-            FVector EntranceWorld = Cave->GetActorTransform().TransformPosition(EntranceFloorLocal);
-            // Raise by capsule half height so character stands on the tunnel floor
-            EntranceWorld.Z += GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-
-            SetActorLocation(EntranceWorld);
-            break;
-        }
-    }
 }
 
 void AIOCCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
     check(PlayerInputComponent);
 
     UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(PlayerInputComponent);
     if (!EIC)
     {
-        UE_LOG(LogTemp, Error, TEXT("IOCCharacter: Enhanced Input Component not found. "
+        UE_LOG(LogIOC, Error, TEXT("IOCCharacter: Enhanced Input Component not found. "
             "Ensure the project uses the Enhanced Input plugin."));
         return;
     }
